@@ -1,0 +1,10 @@
+[package]
+name = "nova_hello_world"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+nova_core = { path = "../../nova_core" }
+nova_web = { path = "../../nova_web" }
+tokio = { version = "1.32", features = ["full"] }

@@ -1,0 +1,4 @@
+[workspace]
+members = ["nova_*", "examples/*"]
+default-members = ["nova_*"]
+resolver = "2"

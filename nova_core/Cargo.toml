@@ -1,0 +1,14 @@
+[package]
+name = "nova_core"
+version = "0.0.0"
+edition = "2021"
+authors = [ "Paweł Walus <pawel.walus@protonmail.com>" ]
+description = "nova - core structures, types and traits"
+keywords = ["nova", "http", "web", "server", "async"]
+homepage = "https://github.com/pw-order-of-devs"
+repository = "https://github.com/pw-order-of-devs/nova"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "nova_core"
+path = "src/lib.rs"
