@@ -1,19 +1,19 @@
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
-/// nova headers
+/// Nova Headers
 #[derive(Debug, Default)]
 pub struct Headers {
     inner: HashMap<String, String>,
 }
 
 impl Headers {
-    /// insert item to NovaHeaders instance
+    /// insert item to Nova Headers instance
     pub fn insert(&mut self, k: &str, v: &str) {
         self.inner.insert(k.to_string(), v.to_string());
     }
 
-    /// build NovaHeaders from vec
+    /// build Nova Headers from vec
     pub fn from_vec(vec: &[&str]) -> Self {
         let inner = vec.iter()
             .filter(|item| item.contains(": "))

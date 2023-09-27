@@ -2,13 +2,13 @@ use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
-use crate::errors::NovaError;
+use crate::errors::ServerError;
 use crate::types::headers::Headers;
 use crate::types::request_type::RequestType;
 
 /// Nova Request definition
 #[derive(Debug)]
-pub struct NovaRequest {
+pub struct HttpRequest {
     r#type: RequestType,
     target: String,
     protocol: String,
@@ -18,14 +18,14 @@ pub struct NovaRequest {
     headers: Headers,
 }
 
-impl FromStr for NovaRequest {
-    type Err = NovaError;
+impl FromStr for HttpRequest {
+    type Err = ServerError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let parts = s.split("\r\n").collect::<Vec<&str>>();
         let request = parts[0].split(' ').collect::<Vec<&str>>();
         let headers = Headers::from_vec(&request);
-        let request = NovaRequest {
+        let request = HttpRequest {
             r#type: RequestType::from_str(request[0])?,
             target: request[1].to_string(),
             protocol: request[2].to_string(),
@@ -38,7 +38,7 @@ impl FromStr for NovaRequest {
     }
 }
 
-impl Display for NovaRequest {
+impl Display for HttpRequest {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let mut errors = vec![];
         errors.push(write!(f, "{} {} {}", self.r#type, self.target, self.protocol));

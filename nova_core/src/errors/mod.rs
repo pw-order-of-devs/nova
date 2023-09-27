@@ -1,8 +1,8 @@
 use std::fmt::{Display, Formatter};
 
-/// nova error
+/// Nova Error
 #[derive(Debug, Clone)]
-pub enum NovaError {
+pub enum ServerError {
     /// EmptyRequest
     EmptyRequest,
     /// InternalError
@@ -18,22 +18,22 @@ pub enum NovaError {
     UnsupportedRequestType,
 }
 
-impl Display for NovaError {
+impl Display for ServerError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            NovaError::EmptyRequest => write!(f, "Empty Request"),
-            NovaError::InternalError => write!(f, "Internal Error"),
-            NovaError::IoError { message } => write!(f, "IO Error: {message}"),
-            NovaError::ParseRequestError => write!(f, "Parse Request Error"),
-            NovaError::UnsupportedRequestType => write!(f, "Unsupported Request Type"),
+            ServerError::EmptyRequest => write!(f, "Empty Request"),
+            ServerError::InternalError => write!(f, "Internal Error"),
+            ServerError::IoError { message } => write!(f, "IO Error: {message}"),
+            ServerError::ParseRequestError => write!(f, "Parse Request Error"),
+            ServerError::UnsupportedRequestType => write!(f, "Unsupported Request Type"),
         }
     }
 }
 
-impl std::error::Error for NovaError {}
+impl std::error::Error for ServerError {}
 
-impl From<std::io::Error> for NovaError {
+impl From<std::io::Error> for ServerError {
     fn from(value: std::io::Error) -> Self {
-        NovaError::IoError { message: value.to_string() }
+        ServerError::IoError { message: value.to_string() }
     }
 }

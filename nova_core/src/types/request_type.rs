@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
-use crate::errors::NovaError;
+use crate::errors::ServerError;
 
 /// http request type
 #[derive(Debug)]
@@ -23,7 +23,7 @@ pub enum RequestType {
 }
 
 impl FromStr for RequestType {
-    type Err = NovaError;
+    type Err = ServerError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
@@ -34,7 +34,7 @@ impl FromStr for RequestType {
             "PUT" => Ok(RequestType::Put),
             "PATCH" => Ok(RequestType::Patch),
             "DELETE" => Ok(RequestType::Delete),
-            _ => Err(NovaError::UnsupportedRequestType),
+            _ => Err(ServerError::UnsupportedRequestType),
         }
     }
 }
