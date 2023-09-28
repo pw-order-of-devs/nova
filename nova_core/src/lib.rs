@@ -12,3 +12,6 @@ pub mod request;
 pub mod response;
 /// nova types
 pub mod types;
+
+/// extensions
+pub(crate) mod ext;

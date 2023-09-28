@@ -3,7 +3,10 @@ use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 use crate::errors::ServerError;
+use crate::ext::hash_map_ext::HashMapExt;
 use crate::types::headers::Headers;
+use crate::types::protocol::Protocol;
+use crate::types::query::Query;
 use crate::types::request_type::RequestType;
 
 /// Nova Request definition
@@ -11,8 +14,8 @@ use crate::types::request_type::RequestType;
 pub struct HttpRequest {
     r#type: RequestType,
     target: String,
-    protocol: String,
-    _query: HashMap<String, String>,
+    protocol: Protocol,
+    query: Query,
     _path: HashMap<String, String>,
     body: String,
     headers: Headers,
@@ -23,6 +26,14 @@ impl HttpRequest {
     pub fn get_route_path(&self) -> (RequestType, String) {
         (self.clone().r#type, self.clone().target)
     }
+
+    /// get query by key
+    pub fn query(&self, key: &str) -> Result<String, ServerError> {
+        match self.query.get_inner().get(key) {
+            Some(item) => Ok(item.clone()),
+            None => Err(ServerError::BadRequest { message: format!("query item \"{key}\" is missing") }),
+        }
+    }
 }
 
 impl FromStr for HttpRequest {
@@ -31,17 +42,23 @@ impl FromStr for HttpRequest {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let parts = s.split("\r\n").collect::<Vec<&str>>();
         let request = parts[0].split(' ').collect::<Vec<&str>>();
-        let headers = Headers::from_vec(&request);
-        let request = HttpRequest {
-            r#type: RequestType::from_str(request[0])?,
-            target: request[1].to_string(),
-            protocol: request[2].to_string(),
-            _query: Default::default(),
+        if request.len() < 3 { return Err(ServerError::ParseRequestError) }
+
+        let protocol = Protocol::from_str(request[2])?;
+        let r#type = RequestType::from_str(request[0])?;
+        let target = request[1].to_string();
+        let query_pos = target.chars().position(|i| i == '?');
+        let (target, query) =
+            if let Some(pos) = query_pos { (target[.. pos].to_string(), Query::from_str(&target[pos + 1..])?) }
+            else { (target, Query::default()) };
+        let headers = Headers::from_str(parts[0])?;
+
+        Ok(HttpRequest {
+            r#type, target, protocol, query,
             _path: Default::default(),
             body: "".to_string(),
             headers,
-        };
-        Ok(request)
+        })
     }
 }
 

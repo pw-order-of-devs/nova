@@ -1,8 +1,14 @@
 use std::fmt::{Display, Formatter};
+use std::string::FromUtf8Error;
 
 /// Nova Error
 #[derive(Clone, Debug)]
 pub enum ServerError {
+    /// BadRequest
+    BadRequest {
+        /// error message
+        message: String,
+    },
     /// EmptyRequest
     EmptyRequest,
     /// InternalError
@@ -23,6 +29,7 @@ pub enum ServerError {
 impl Display for ServerError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
+            ServerError::BadRequest { message } => write!(f, "Bad Request: {message}"),
             ServerError::EmptyRequest => write!(f, "Empty Request"),
             ServerError::InternalError => write!(f, "Internal Error"),
             ServerError::IoError { message } => write!(f, "IO Error: {message}"),
@@ -38,5 +45,11 @@ impl std::error::Error for ServerError {}
 impl From<std::io::Error> for ServerError {
     fn from(value: std::io::Error) -> Self {
         ServerError::IoError { message: value.to_string() }
+    }
+}
+
+impl From<FromUtf8Error> for ServerError {
+    fn from(_: FromUtf8Error) -> Self {
+        ServerError::ParseRequestError
     }
 }

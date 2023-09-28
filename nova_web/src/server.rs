@@ -59,7 +59,7 @@ impl Server {
         let mut str = [0u8; 8192];
         match stream.read(&mut str).await {
             Ok(n) if n == 0 => Err(ServerError::EmptyRequest),
-            Ok(_) => HttpRequest::from_str(&String::from_utf8(str.to_vec()).unwrap()),
+            Ok(_) => HttpRequest::from_str(&String::from_utf8(str.as_slice().to_vec())?),
             Err(e) => {
                 tracing::error!("failed to read from socket; err = {:?}", e);
                 Err(ServerError::ParseRequestError)
@@ -69,8 +69,7 @@ impl Server {
 
     async fn handle_response(stream: &mut TcpStream, request: HttpRequest, router: Router) -> std::io::Result<()> {
         tracing::debug!("incoming request:\n{request}");
-        let route_path = request.get_route_path();
-        match &mut router.find_route_by_path(&route_path.0.to_string(), &route_path.1) {
+        match &mut router.match_route(request.get_route_path()) {
             Some(route) => match route.call(request) {
                 Ok(response) => stream.write_all(format!("{response}").as_bytes()).await,
                 Err(e) => Self::handle_error(stream, e).await,

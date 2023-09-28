@@ -1,6 +1,7 @@
 use std::fmt::{Display, Formatter};
 
 use crate::errors::ServerError;
+use crate::ext::hash_map_ext::HashMapExt;
 use crate::types::headers::Headers;
 use crate::types::protocol::Protocol;
 use crate::types::status::HttpStatus;
@@ -22,6 +23,7 @@ impl HttpResponse {
     /// Build Nova Response from NovaError
     pub fn from_error(e: ServerError, protocol: Protocol) -> Self {
         let (status, body) = match e {
+            ServerError::BadRequest { .. } => (HttpStatus::BadRequest, "Bad request"),
             ServerError::EmptyRequest => (HttpStatus::BadRequest, "Empty request"),
             ServerError::InternalError => (HttpStatus::InternalServerError, "Internal error"),
             ServerError::IoError { .. } => (HttpStatus::InternalServerError, "IO error"),
