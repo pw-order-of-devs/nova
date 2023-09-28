@@ -1,12 +1,18 @@
 use nova_core::errors::ServerError;
 use nova_core::request::HttpRequest;
-use nova_core::response::HttpResponse;
+use nova_core::response::HttpResponseBuilder;
 use nova_core::types::status::HttpStatus;
+
 use nova_router::callable::ServerResponse;
+
 use nova_web::server::Server;
 
 fn hello_world(_: HttpRequest) -> ServerResponse {
-    Ok(HttpResponse::build(HttpStatus::OK, "Hello World!", Default::default(), "HTTP/1.1"))
+    let response = HttpResponseBuilder::new()
+        .status(HttpStatus::OK)
+        .body("Hello World!")
+        .build();
+    Ok(response)
 }
 
 fn error_page(_: HttpRequest) -> ServerResponse {

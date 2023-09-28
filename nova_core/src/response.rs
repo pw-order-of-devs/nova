@@ -2,30 +2,25 @@ use std::fmt::{Display, Formatter};
 
 use crate::errors::ServerError;
 use crate::types::headers::Headers;
+use crate::types::protocol::Protocol;
 use crate::types::status::HttpStatus;
 
 /// Nova Response definition
 #[derive(Clone, Debug)]
 pub struct HttpResponse {
-    protocol: String,
+    protocol: Protocol,
     status: HttpStatus,
     body: String,
     headers: Headers,
 }
 
 impl HttpResponse {
-    /// Build Nova Response
-    pub fn build(status: HttpStatus, body: &str, headers: Headers, protocol: &str) -> Self {
-        HttpResponse {
-            protocol: protocol.to_string(),
-            status,
-            body: body.to_string(),
-            headers,
-        }
+    fn build(status: HttpStatus, body: &str, headers: Headers, protocol: Protocol) -> Self {
+        HttpResponse { protocol, status, body: body.to_string(), headers, }
     }
 
     /// Build Nova Response from NovaError
-    pub fn from_error(e: ServerError, protocol: &str) -> Self {
+    pub fn from_error(e: ServerError, protocol: Protocol) -> Self {
         let (status, body) = match e {
             ServerError::EmptyRequest => (HttpStatus::BadRequest, "Empty request"),
             ServerError::InternalError => (HttpStatus::InternalServerError, "Internal error"),
@@ -37,12 +32,7 @@ impl HttpResponse {
         let mut headers = Headers::default();
         headers.insert("Content-length", &body.len().to_string());
 
-        HttpResponse {
-            protocol: protocol.to_string(),
-            status,
-            body: body.to_string(),
-            headers,
-        }
+        HttpResponse { protocol, status, body: body.to_string(), headers, }
     }
 }
 
@@ -55,5 +45,56 @@ impl Display for HttpResponse {
 
         if !errors.is_empty() { errors[0] }
         else { Ok(()) }
+    }
+}
+
+/// Nova Response Builder definition
+#[derive(Clone, Debug, Default)]
+pub struct HttpResponseBuilder {
+    protocol: Protocol,
+    status: HttpStatus,
+    body: String,
+    headers: Headers,
+}
+
+impl HttpResponseBuilder {
+    /// initialize builder
+    pub fn new() -> Self {
+        HttpResponseBuilder::default()
+    }
+
+    /// set protocol
+    pub fn protocol(mut self, value: Protocol) -> Self {
+        self.protocol = value;
+        self
+    }
+
+    /// set status
+    pub fn status(mut self, value: HttpStatus) -> Self {
+        self.status = value;
+        self
+    }
+
+    /// set body
+    pub fn body(mut self, value: &str) -> Self {
+        self.body = value.to_string();
+        self
+    }
+
+    /// set headers
+    pub fn headers(mut self, value: Headers) -> Self {
+        self.headers = value;
+        self
+    }
+
+    /// add header
+    pub fn header(mut self, k: &str, v: &str) -> Self {
+        self.headers.insert(k, v);
+        self
+    }
+
+    /// build response
+    pub fn build(self) -> HttpResponse {
+        HttpResponse::build(self.status, &self.body, self.headers, self.protocol)
     }
 }

@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 
 /// Nova Http Status
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Default)]
 pub enum HttpStatus {
     /// Http Status 100: Continue
     Continue,
@@ -12,7 +12,7 @@ pub enum HttpStatus {
     /// Http Status 103: Early Hints
     EarlyHints,
     /// Http Status 200: OK
-    OK,
+    #[default] OK,
     /// Http Status 201: Created
     Created,
     /// Http Status 202: Accepted
@@ -140,7 +140,7 @@ impl Display for HttpStatus {
             HttpStatus::SwitchingProtocols => write!(f, "101 Switching Protocols"),
             HttpStatus::Processing => write!(f, "102 Processing"),
             HttpStatus::EarlyHints => write!(f, "103 Early Hints"),
-            HttpStatus::OK => write!(f, "200 OK"),
+            HttpStatus::OK => write!(f, "200 Ok"),
             HttpStatus::Created => write!(f, "201 Created"),
             HttpStatus::Accepted => write!(f, "202 Accepted"),
             HttpStatus::NonAuthoritativeInformation => write!(f, "203 Non-Authoritative Information"),

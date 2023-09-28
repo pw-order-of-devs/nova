@@ -6,6 +6,7 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use nova_core::errors::ServerError;
 use nova_core::request::HttpRequest;
 use nova_core::response::HttpResponse;
+use nova_core::types::protocol::Protocol;
 
 use nova_router::callable::{CloneableFn, ServerResponse};
 use nova_router::router::Router;
@@ -79,7 +80,7 @@ impl Server {
     }
 
     async fn handle_error(stream: &mut TcpStream, error: ServerError) -> std::io::Result<()> {
-        let response = HttpResponse::from_error(error, "HTTP/1.1");
+        let response = HttpResponse::from_error(error, Protocol::default());
         tracing::debug!("server response:\n{response}");
         stream.write_all(format!("{response}").as_bytes()).await
     }
