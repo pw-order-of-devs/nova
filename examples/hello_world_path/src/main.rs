@@ -4,6 +4,7 @@ use nova_core::response::HttpResponseBuilder;
 use nova_core::types::status::HttpStatus;
 
 use nova_router::callable::ServerResponse;
+use nova_router::server_routing::ServerRouting;
 
 use nova_web::server::Server;
 
@@ -19,6 +20,6 @@ fn hello_path(req: HttpRequest) -> ServerResponse {
 #[tokio::main]
 async fn main() -> Result<(), ServerError> {
     Server::create("0.0.0.0", 8181)
-        .route("GET", "/hello/{name}", hello_path)
+        .get("/hello/{name}", hello_path)
         .bind().await
 }

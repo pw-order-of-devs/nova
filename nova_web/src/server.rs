@@ -7,9 +7,11 @@ use nova_core::errors::ServerError;
 use nova_core::request::HttpRequest;
 use nova_core::response::HttpResponse;
 use nova_core::types::protocol::Protocol;
+use nova_core::types::request_type::RequestType;
 
 use nova_router::callable::{CloneableFn, ServerResponse};
 use nova_router::router::Router;
+use nova_router::server_routing::ServerRouting;
 
 /// Nova server structure
 #[derive(Clone, Debug)]
@@ -30,12 +32,6 @@ impl Server {
     ///
     pub fn create(host: &str, port: u16) -> Self {
         Server { host: host.to_string(), port, router: Router::default(), }
-    }
-
-    /// Register new route
-    pub fn route<F: CloneableFn<Output=ServerResponse> + 'static>(mut self, r#type: &str, path: &str, f: F) -> Self {
-        self.router.register(r#type, path, f);
-        self
     }
 
     /// Start Nova Server
@@ -85,5 +81,12 @@ impl Server {
         let response = HttpResponse::from_error(error, Protocol::default());
         tracing::debug!("server response:\n{response}");
         stream.write_all(format!("{response}").as_bytes()).await
+    }
+}
+
+impl ServerRouting for Server {
+    fn route<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, r#type: RequestType, path: &str, f: F) -> Self {
+        self.router.register(r#type, path, f);
+        self.clone()
     }
 }

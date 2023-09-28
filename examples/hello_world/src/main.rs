@@ -4,6 +4,7 @@ use nova_core::response::HttpResponseBuilder;
 use nova_core::types::status::HttpStatus;
 
 use nova_router::callable::ServerResponse;
+use nova_router::server_routing::ServerRouting;
 
 use nova_web::server::Server;
 
@@ -22,7 +23,7 @@ fn error_page(_: HttpRequest) -> ServerResponse {
 #[tokio::main]
 async fn main() -> Result<(), ServerError> {
     Server::create("0.0.0.0", 8181)
-        .route("GET", "/hello", hello_world)
-        .route("GET", "/error", error_page)
+        .get("/hello", hello_world)
+        .get("/error", error_page)
         .bind().await
 }

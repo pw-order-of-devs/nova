@@ -4,6 +4,7 @@ use nova_core::response::HttpResponseBuilder;
 use nova_core::types::status::HttpStatus;
 
 use nova_router::callable::ServerResponse;
+use nova_router::server_routing::ServerRouting;
 
 use nova_web::server::Server;
 
@@ -31,7 +32,7 @@ fn hello_query_opt(req: HttpRequest) -> ServerResponse {
 #[tokio::main]
 async fn main() -> Result<(), ServerError> {
     Server::create("0.0.0.0", 8181)
-        .route("GET", "/hello", hello_query)
-        .route("GET", "/hello/opt", hello_query_opt)
+        .get("/hello", hello_query)
+        .get("/hello/opt", hello_query_opt)
         .bind().await
 }

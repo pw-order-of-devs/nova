@@ -1,24 +1,22 @@
 use std::fmt::{Debug, Formatter};
+
 use nova_core::request::HttpRequest;
+use nova_core::types::request_type::RequestType;
 
 use crate::callable::{CloneableFn, ServerResponse};
 
 /// Nova Route structure
 #[derive(Clone)]
 pub struct Route {
-    r#type: String,
+    r#type: RequestType,
     path: String,
     f: Box<dyn CloneableFn<Output=ServerResponse>>,
 }
 
 impl Route {
     /// create new route
-    pub fn new<F: CloneableFn<Output=ServerResponse> + 'static>(r#type: &str, path: &str, f: F) -> Self {
-        Self {
-            r#type: r#type.to_string(),
-            path: path.to_string(),
-            f: Box::new(f),
-        }
+    pub fn new<F: CloneableFn<Output=ServerResponse> + 'static>(r#type: RequestType, path: &str, f: F) -> Self {
+        Self { r#type, path: path.to_string(), f: Box::new(f), }
     }
 
     /// extract path string
@@ -27,7 +25,7 @@ impl Route {
     }
 
     /// check if route matches predicate
-    pub fn matches(&self, r#type: &str, path: &str) -> bool {
+    pub fn matches(&self, r#type: RequestType, path: &str) -> bool {
         if self.r#type != r#type { return false }
         let self_segments = self.path.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
         let segments = path.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
