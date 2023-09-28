@@ -12,7 +12,7 @@ pub struct Router {
 impl Router {
     /// register new route
     pub fn register<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, r#type: RequestType, path: &str, f: F) {
-        self.routes.push(Route::new(r#type, path, f));
+        self.routes.push(Route::route(r#type, path, f));
     }
 
     /// find route for request

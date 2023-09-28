@@ -1,11 +1,15 @@
 use nova_core::types::request_type::RequestType;
 
 use crate::callable::{CloneableFn, ServerResponse};
+use crate::route::Route;
 
 /// Routes registration for server
 pub trait ServerRouting where Self: Clone {
     /// Register new route
     fn route<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, r#type: RequestType, path: &str, f: F) -> Self where Self: Sized;
+
+    /// Register new service route
+    fn service(&mut self, path: &str, routes: Vec<Route>) -> Self where Self: Sized;
 
     /// Register new get route
     fn get<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, path: &str, f: F) -> Self where Self: Sized {
