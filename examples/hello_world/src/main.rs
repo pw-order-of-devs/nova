@@ -6,7 +6,7 @@ use nova_router::callable::ServerResponse;
 use nova_web::server::Server;
 
 fn hello_world(_: HttpRequest) -> ServerResponse {
-    Ok(HttpResponse::build(HttpStatus::Ok, "Hello World!", Default::default(), "HTTP/1.1"))
+    Ok(HttpResponse::build(HttpStatus::OK, "Hello World!", Default::default(), "HTTP/1.1"))
 }
 
 fn error_page(_: HttpRequest) -> ServerResponse {

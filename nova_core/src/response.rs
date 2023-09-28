@@ -28,8 +28,8 @@ impl HttpResponse {
     pub fn from_error(e: ServerError, protocol: &str) -> Self {
         let (status, body) = match e {
             ServerError::EmptyRequest => (HttpStatus::BadRequest, "Empty request"),
-            ServerError::InternalError => (HttpStatus::InternalError, "Internal error"),
-            ServerError::IoError { .. } => (HttpStatus::InternalError, "IO error"),
+            ServerError::InternalError => (HttpStatus::InternalServerError, "Internal error"),
+            ServerError::IoError { .. } => (HttpStatus::InternalServerError, "IO error"),
             ServerError::NotFound { .. } => (HttpStatus::NotFound, "Not Found"),
             ServerError::ParseRequestError => (HttpStatus::BadRequest, "Bad request"),
             ServerError::UnsupportedRequestType => (HttpStatus::MethodNotAllowed, "Unsupported request type"),
