@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
+
 use crate::errors::ServerError;
 use crate::ext::has_error::ValidateHasError;
-
 use crate::ext::hash_map_ext::HashMapExt;
 
 /// Nova Query
@@ -22,7 +22,6 @@ impl HashMapExt for Query {
 
     fn from_str(str: &str) -> Result<Self, ServerError> {
         let inner = str.split('&')
-            .into_iter()
             .map(|i| {
                 let item = i.split('=').collect::<Vec<&str>>();
                 if item.len() < 2 { Err(ServerError::BadRequest { message: "unable to parse query string".to_string() }) }

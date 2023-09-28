@@ -21,9 +21,20 @@ impl Route {
         }
     }
 
+    /// extract path string
+    pub fn get_path(self) -> String {
+        self.path
+    }
+
     /// check if route matches predicate
     pub fn matches(&self, r#type: &str, path: &str) -> bool {
-        self.r#type == r#type && self.path == path
+        if self.r#type != r#type { return false }
+        let self_segments = self.path.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
+        let segments = path.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
+        if self_segments.len() != segments.len() { return false }
+        self_segments.into_iter()
+            .zip(segments.into_iter())
+            .all(|(s, t)| s == t || (s.starts_with('{') && s.ends_with('}')))
     }
 
     /// call handler

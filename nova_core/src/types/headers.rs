@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
+
 use crate::errors::ServerError;
 use crate::ext::has_error::ValidateHasError;
-
 use crate::ext::hash_map_ext::HashMapExt;
 
 /// Nova Headers
@@ -22,7 +22,6 @@ impl HashMapExt for Headers {
 
     fn from_str(str: &str) -> Result<Self, ServerError>  {
         let inner = str.split(' ')
-            .into_iter()
             .filter(|item| item.contains(": "))
             .map(|item| {
                 let item = item.split(": ").collect::<Vec<&str>>();

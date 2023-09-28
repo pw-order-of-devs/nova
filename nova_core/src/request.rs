@@ -1,10 +1,10 @@
-use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 use crate::errors::ServerError;
 use crate::ext::hash_map_ext::HashMapExt;
 use crate::types::headers::Headers;
+use crate::types::path::Path;
 use crate::types::protocol::Protocol;
 use crate::types::query::Query;
 use crate::types::request_type::RequestType;
@@ -16,7 +16,7 @@ pub struct HttpRequest {
     target: String,
     protocol: Protocol,
     query: Query,
-    _path: HashMap<String, String>,
+    path: Path,
     body: String,
     headers: Headers,
 }
@@ -25,6 +25,27 @@ impl HttpRequest {
     /// extract route details
     pub fn get_route_path(&self) -> (RequestType, String) {
         (self.clone().r#type, self.clone().target)
+    }
+
+    /// update path map from route
+    pub fn update_path(mut self, route: &str) -> Self {
+        let self_segments = self.target.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
+        let segments = route.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
+        let inner = self_segments.into_iter()
+            .zip(segments.into_iter())
+            .filter(|(_, t)| (t.starts_with('{') && t.ends_with('}')))
+            .map(|(s, t)| (t[1 .. t.len() - 1].to_string(), s.to_string()))
+            .collect();
+        self.path = Path::new(inner);
+        self
+    }
+
+    /// get path by key
+    pub fn path(&self, key: &str) -> Result<String, ServerError> {
+        match self.path.get_inner().get(key) {
+            Some(item) => Ok(item.clone()),
+            None => Err(ServerError::BadRequest { message: format!("path item \"{key}\" is missing") }),
+        }
     }
 
     /// get query by key
@@ -55,7 +76,7 @@ impl FromStr for HttpRequest {
 
         Ok(HttpRequest {
             r#type, target, protocol, query,
-            _path: Default::default(),
+            path: Default::default(),
             body: "".to_string(),
             headers,
         })

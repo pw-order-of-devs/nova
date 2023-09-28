@@ -70,9 +70,12 @@ impl Server {
     async fn handle_response(stream: &mut TcpStream, request: HttpRequest, router: Router) -> std::io::Result<()> {
         tracing::debug!("incoming request:\n{request}");
         match &mut router.match_route(request.get_route_path()) {
-            Some(route) => match route.call(request) {
-                Ok(response) => stream.write_all(format!("{response}").as_bytes()).await,
-                Err(e) => Self::handle_error(stream, e).await,
+            Some(route) => {
+                let request = request.update_path(&route.clone().get_path());
+                match route.call(request) {
+                    Ok(response) => stream.write_all(format!("{response}").as_bytes()).await,
+                    Err(e) => Self::handle_error(stream, e).await,
+                }
             },
             None => Self::handle_error(stream, ServerError::NotFound).await,
         }

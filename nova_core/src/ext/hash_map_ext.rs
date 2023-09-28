@@ -10,7 +10,9 @@ pub(crate) trait HashMapExt {
         self.get_inner().insert(k.to_string(), v.to_string());
     }
 
-    fn from_str(str: &str) -> Result<Self, ServerError> where Self: Sized;
+    fn from_str(_: &str) -> Result<Self, ServerError> where Self: Sized {
+        todo!()
+    }
 
     fn is_empty(&self) -> bool {
         self.get_inner().is_empty()

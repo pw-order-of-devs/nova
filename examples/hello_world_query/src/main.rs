@@ -8,10 +8,10 @@ use nova_router::callable::ServerResponse;
 use nova_web::server::Server;
 
 fn hello_query(req: HttpRequest) -> ServerResponse {
-    let query = req.query("name")?;
+    let name = req.query("name")?;
     let response = HttpResponseBuilder::new()
         .status(HttpStatus::OK)
-        .body(&format!("Hello World, {}!", query))
+        .body(&format!("Hello, {}!", name))
         .build();
     Ok(response)
 }
@@ -23,7 +23,7 @@ fn hello_query_opt(req: HttpRequest) -> ServerResponse {
     };
     let response = HttpResponseBuilder::new()
         .status(HttpStatus::OK)
-        .body(&format!("Hello World, {}!", name))
+        .body(&format!("Hello, {}!", name))
         .build();
     Ok(response)
 }

@@ -1,5 +1,7 @@
 /// nova headers
 pub mod headers;
+/// nova path
+pub mod path;
 /// nova protocol
 pub mod protocol;
 /// nova query
