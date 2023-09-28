@@ -7,7 +7,7 @@ use crate::types::headers::Headers;
 use crate::types::request_type::RequestType;
 
 /// Nova Request definition
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct HttpRequest {
     r#type: RequestType,
     target: String,
@@ -16,6 +16,13 @@ pub struct HttpRequest {
     _path: HashMap<String, String>,
     body: String,
     headers: Headers,
+}
+
+impl HttpRequest {
+    /// extract route details
+    pub fn get_route_path(&self) -> (RequestType, String) {
+        (self.clone().r#type, self.clone().target)
+    }
 }
 
 impl FromStr for HttpRequest {

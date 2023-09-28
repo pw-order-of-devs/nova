@@ -6,5 +6,6 @@ publish = false
 
 [dependencies]
 nova_core = { path = "../../nova_core" }
+nova_router = { path = "../../nova_router" }
 nova_web = { path = "../../nova_web" }
 tokio = { version = "1.32", features = ["full"] }

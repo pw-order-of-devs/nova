@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 
 /// Nova Error
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub enum ServerError {
     /// EmptyRequest
     EmptyRequest,
@@ -12,6 +12,8 @@ pub enum ServerError {
         /// error message
         message: String,
     },
+    /// Resource Not Found
+    NotFound,
     /// ParseRequestError
     ParseRequestError,
     /// UnsupportedRequestType
@@ -24,6 +26,7 @@ impl Display for ServerError {
             ServerError::EmptyRequest => write!(f, "Empty Request"),
             ServerError::InternalError => write!(f, "Internal Error"),
             ServerError::IoError { message } => write!(f, "IO Error: {message}"),
+            ServerError::NotFound => write!(f, "Not Found"),
             ServerError::ParseRequestError => write!(f, "Parse Request Error"),
             ServerError::UnsupportedRequestType => write!(f, "Unsupported Request Type"),
         }

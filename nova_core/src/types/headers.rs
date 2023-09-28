@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
 /// Nova Headers
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct Headers {
     inner: HashMap<String, String>,
 }

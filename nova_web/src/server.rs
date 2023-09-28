@@ -7,11 +7,15 @@ use nova_core::errors::ServerError;
 use nova_core::request::HttpRequest;
 use nova_core::response::HttpResponse;
 
+use nova_router::callable::{CloneableFn, ServerResponse};
+use nova_router::router::Router;
+
 /// Nova server structure
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Server {
     host: String,
     port: u16,
+    router: Router,
 }
 
 /// Nova Server implementation
@@ -24,22 +28,26 @@ impl Server {
     /// * `port` - port to listen on, like '8080'
     ///
     pub fn create(host: &str, port: u16) -> Self {
-        Server { host: host.to_string(), port }
+        Server { host: host.to_string(), port, router: Router::default(), }
+    }
+
+    /// Register new route
+    pub fn route<F: CloneableFn<Output=ServerResponse> + 'static>(mut self, r#type: &str, path: &str, f: F) -> Self {
+        self.router.register(r#type, path, f);
+        self
     }
 
     /// Start Nova Server
-    pub async fn bind(&self) -> Result<(), ServerError> {
+    pub async fn bind(self) -> Result<(), ServerError> {
         tracing_subscriber::fmt::init();
         let listener = TcpListener::bind(&format!("{}:{}", self.host, self.port)).await?;
         tracing::info!("nova server listening at {}:{}", self.host, self.port);
         loop {
             let (mut stream, _) = listener.accept().await?;
+            let router = self.router.clone();
             tokio::spawn(async move {
                 match Self::handle_request(&mut stream).await {
-                    Ok(request) => {
-                        tracing::info!("incoming request:\n{request}");
-                        let _ = Self::handle_response(&mut stream).await;
-                    },
+                    Ok(request) => { let _ = Self::handle_response(&mut stream, request, router).await; },
                     Err(e) => { let _ = Self::handle_error(&mut stream, e).await; },
                 }
             });
@@ -58,8 +66,16 @@ impl Server {
         }
     }
 
-    async fn handle_response(stream: &mut TcpStream) -> std::io::Result<()> {
-        stream.write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, world!").await
+    async fn handle_response(stream: &mut TcpStream, request: HttpRequest, router: Router) -> std::io::Result<()> {
+        tracing::debug!("incoming request:\n{request}");
+        let route_path = request.get_route_path();
+        match &mut router.find_route_by_path(&route_path.0.to_string(), &route_path.1) {
+            Some(route) => match route.call(request) {
+                Ok(response) => stream.write_all(format!("{response}").as_bytes()).await,
+                Err(e) => Self::handle_error(stream, e).await,
+            },
+            None => Self::handle_error(stream, ServerError::NotFound).await,
+        }
     }
 
     async fn handle_error(stream: &mut TcpStream, error: ServerError) -> std::io::Result<()> {

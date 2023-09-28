@@ -1,21 +1,17 @@
 [package]
-name = "nova_web"
+name = "nova_router"
 version = "0.0.0"
 edition = "2021"
 authors = [ "Paweł Walus <pawel.walus@protonmail.com>" ]
-description = "nova - rust web server"
+description = "nova - router"
 keywords = ["nova", "http", "web", "server", "async"]
 homepage = "https://github.com/pw-order-of-devs"
 repository = "https://github.com/pw-order-of-devs/nova"
 license = "MIT OR Apache-2.0"
 
 [lib]
-name = "nova_web"
+name = "nova_router"
 path = "src/lib.rs"
 
 [dependencies]
 nova_core = { path = "../nova_core" }
-nova_router = { path = "../nova_router" }
-tokio = { version = "1.32", features = ["full"] }
-tracing = "0.1"
-tracing-subscriber = "0.3"
