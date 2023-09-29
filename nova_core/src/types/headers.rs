@@ -24,6 +24,12 @@ impl HashMapExt for Headers {
         self.inner.insert(k.to_string(), v.to_string());
     }
 
+    fn insert_if_not_exists(&mut self, k: &str, v: &str) {
+        if !self.contains_key(k) {
+            self.inner.insert(k.to_string(), v.to_string());
+        }
+    }
+
     fn from_str(str: &str) -> Result<Self, ServerError>  {
         let inner = str.split(' ')
             .filter(|item| item.contains(": "))

@@ -67,6 +67,14 @@ impl HttpResponse {
         self.headers.insert(k, v);
         self
     }
+
+    /// append default headers if not present
+    pub fn append_default_headers(mut self) -> Self {
+        self.headers.insert_if_not_exists("Content-Length", &self.body.len().to_string());
+        self.headers.insert_if_not_exists("Content-Type", "text/plain; charset=utf-8");
+        self.headers.insert_if_not_exists("Date", &chrono::Utc::now().to_rfc2822());
+        self.clone()
+    }
 }
 
 impl Display for HttpResponse {

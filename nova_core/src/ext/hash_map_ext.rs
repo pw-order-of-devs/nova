@@ -6,7 +6,15 @@ pub(crate) trait HashMapExt {
     fn new(inner: HashMap<String, String>) -> Self where Self: Sized;
     fn get_inner(&self) -> HashMap<String, String>;
 
+    fn contains_key(&mut self, key: &str) -> bool {
+        self.get_inner().keys().any(|k| k.to_lowercase() == key.to_lowercase())
+    }
+
     fn insert(&mut self, _: &str, _: &str) {
+        todo!()
+    }
+
+    fn insert_if_not_exists(&mut self, _: &str, _: &str) {
         todo!()
     }
 

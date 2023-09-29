@@ -4,14 +4,14 @@ use nova_core::request::HttpRequest;
 use nova_core::response::HttpResponse;
 use nova_core::types::request_type::RequestType;
 
-use crate::callable::{CloneableFn, ServerResponse};
+use crate::callable::{BoxedCallable, CloneableFn, ServerResponse};
 
 /// Nova Route structure
 #[derive(Clone)]
 pub struct Route {
     r#type: RequestType,
     path: String,
-    f: Option<Box<dyn CloneableFn<Output=ServerResponse>>>,
+    f: Option<BoxedCallable>,
     routes: Vec<Route>,
 }
 
@@ -38,7 +38,7 @@ impl Route {
     }
 
     /// get callable
-    pub fn get_callable(self) -> Option<Box<dyn CloneableFn<Output=ServerResponse>>> {
+    pub fn get_callable(self) -> Option<BoxedCallable> {
         self.f
     }
 

@@ -4,6 +4,8 @@ use nova_core::response::HttpResponse;
 
 /// Callable return type
 pub type ServerResponse = Result<HttpResponse, ServerError>;
+/// CallableType
+pub type BoxedCallable = Box<dyn CloneableFn<Output=ServerResponse> + 'static>;
 
 /// Base trait for route function
 pub trait CloneableFn: FnMut(HttpRequest, HttpResponse) -> ServerResponse + Sync + Send {

@@ -81,22 +81,13 @@ impl Server {
                     Err(e) => Self::handle_error(stream, e).await,
                 }
             },
-            None => match fallback {
-                Some(mut f) => {
-                    let response = HttpResponse::default()
-                        .protocol(protocol);
-                    match f(request, response) {
-                        Ok(response) => stream.write_all(format!("{response}").as_bytes()).await,
-                        Err(e) => Self::handle_error(stream, e).await,
-                    }
-                },
-                None => Self::handle_error(stream, ServerError::NotFound).await,
-            },
+            None => Self::handle_error(stream, ServerError::NotFound).await,
         }
     }
 
     async fn handle_error(stream: &mut TcpStream, error: ServerError) -> std::io::Result<()> {
-        let response = HttpResponse::from_error(error, Protocol::default());
+        let response = HttpResponse::from_error(error, Protocol::default())
+            .append_default_headers();
         stream.write_all(format!("{response}").as_bytes()).await
     }
 }

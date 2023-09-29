@@ -2,14 +2,14 @@ use std::fmt::{Debug, Formatter};
 use regex::Regex;
 use nova_core::types::request_type::RequestType;
 
-use crate::callable::{CloneableFn, ServerResponse};
+use crate::callable::{BoxedCallable, CloneableFn, ServerResponse};
 use crate::route::Route;
 
 /// Nova Router structure
 #[derive(Clone, Default)]
 pub struct Router {
     routes: Vec<Route>,
-    fallback: Option<Box<dyn CloneableFn<Output=ServerResponse>>>,
+    fallback: Option<BoxedCallable>,
 }
 
 impl Router {
@@ -31,13 +31,17 @@ impl Router {
     }
 
     /// get fallback route
-    pub fn get_fallback(self) -> Option<Box<dyn CloneableFn<Output=ServerResponse>>> {
+    pub fn get_fallback(self) -> Option<BoxedCallable> {
         self.fallback
     }
 
     /// find route for request
-    pub fn match_route(&self, route: (RequestType, String)) -> Option<Route> {
-        self.routes.clone().into_iter().find(|r| r.matches(route.0, &route.1))
+    pub fn match_route(&self, route: (RequestType, String), fallback: Option<BoxedCallable>) -> Option<(BoxedCallable, String)> {
+        if let Some(route) = self.routes.clone().into_iter().find(|r| r.matches(route.0, &route.1)) {
+            Some((route.clone().get_callable().unwrap(), route.get_path()))
+        } else {
+            fallback.map(|f| (f, "".to_string()))
+        }
     }
 }
 
