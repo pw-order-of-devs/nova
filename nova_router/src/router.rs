@@ -1,3 +1,4 @@
+use regex::Regex;
 use nova_core::types::request_type::RequestType;
 
 use crate::callable::{CloneableFn, ServerResponse};
@@ -12,6 +13,13 @@ pub struct Router {
 impl Router {
     /// register new route
     pub fn register<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, r#type: RequestType, path: &str, f: F) {
+        if self.routes.iter().any(|r| r.clone().get_path() == path) {
+            return;
+        }
+        let pattern = r"^/([a-zA-Z0-9_]+(/([a-zA-Z0-9_]+|\{[a-zA-Z0-9_]+\}))*/?)?$";
+        if !Regex::new(pattern).unwrap().is_match(path) {
+            return;
+        }
         self.routes.push(Route::route(r#type, path, f));
     }
 
