@@ -1,6 +1,7 @@
 use std::fmt::{Debug, Formatter};
 
 use nova_core::request::HttpRequest;
+use nova_core::response::HttpResponse;
 use nova_core::types::request_type::RequestType;
 
 use crate::callable::{CloneableFn, ServerResponse};
@@ -58,8 +59,8 @@ impl Route {
     }
 
     /// call handler
-    pub fn call(&mut self, request: HttpRequest) -> ServerResponse {
-        (self.f.clone().unwrap())(request)
+    pub fn call(&mut self, request: HttpRequest, response: HttpResponse) -> ServerResponse {
+        (self.f.clone().unwrap())(request, response)
     }
 }
 

@@ -1,6 +1,6 @@
 use nova_core::errors::ServerError;
 use nova_core::request::HttpRequest;
-use nova_core::response::HttpResponseBuilder;
+use nova_core::response::HttpResponse;
 use nova_core::types::status::HttpStatus;
 
 use nova_router::callable::ServerResponse;
@@ -9,12 +9,10 @@ use nova_router::server_routing::ServerRouting;
 
 use nova_web::server::Server;
 
-fn hello_world(_: HttpRequest) -> ServerResponse {
-    let response = HttpResponseBuilder::new()
+fn hello_world(_: HttpRequest, res: HttpResponse) -> ServerResponse {
+    Ok(res
         .status(HttpStatus::OK)
-        .body("Hello World!")
-        .build();
-    Ok(response)
+        .body("Hello, World!"))
 }
 
 #[tokio::main]
