@@ -20,6 +20,10 @@ impl HashMapExt for Headers {
         self.inner.clone()
     }
 
+    fn insert(&mut self, k: &str, v: &str) {
+        self.inner.insert(k.to_string(), v.to_string());
+    }
+
     fn from_str(str: &str) -> Result<Self, ServerError>  {
         let inner = str.split(' ')
             .filter(|item| item.contains(": "))

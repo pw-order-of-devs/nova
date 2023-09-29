@@ -6,8 +6,8 @@ pub(crate) trait HashMapExt {
     fn new(inner: HashMap<String, String>) -> Self where Self: Sized;
     fn get_inner(&self) -> HashMap<String, String>;
 
-    fn insert(&mut self, k: &str, v: &str) {
-        self.get_inner().insert(k.to_string(), v.to_string());
+    fn insert(&mut self, _: &str, _: &str) {
+        todo!()
     }
 
     fn from_str(_: &str) -> Result<Self, ServerError> where Self: Sized {
