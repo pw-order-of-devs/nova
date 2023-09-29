@@ -1,5 +1,5 @@
 [package]
-name = "nova_hello_world"
+name = "example_nova_hello_world"
 version = "0.0.0"
 edition = "2021"
 publish = false

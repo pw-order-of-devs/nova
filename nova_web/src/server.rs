@@ -70,6 +70,7 @@ impl Server {
     }
 
     async fn handle_response(stream: &mut TcpStream, request: HttpRequest, router: Router, protocol: Protocol) -> std::io::Result<()> {
+        let fallback = router.clone().get_fallback();
         match &mut router.match_route(request.get_route_path()) {
             Some(route) => {
                 let response = HttpResponse::default()
@@ -80,7 +81,17 @@ impl Server {
                     Err(e) => Self::handle_error(stream, e).await,
                 }
             },
-            None => Self::handle_error(stream, ServerError::NotFound).await,
+            None => match fallback {
+                Some(mut f) => {
+                    let response = HttpResponse::default()
+                        .protocol(protocol);
+                    match f(request, response) {
+                        Ok(response) => stream.write_all(format!("{response}").as_bytes()).await,
+                        Err(e) => Self::handle_error(stream, e).await,
+                    }
+                },
+                None => Self::handle_error(stream, ServerError::NotFound).await,
+            },
         }
     }
 
@@ -105,6 +116,11 @@ impl ServerRouting for Server {
                 self.service(path, item.get_routes());
             }
         });
+        self.clone()
+    }
+
+    fn fallback<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, f: F) -> Self where Self: Sized {
+        self.router.register_fallback(f);
         self.clone()
     }
 }

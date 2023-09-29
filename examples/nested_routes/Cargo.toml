@@ -1,5 +1,5 @@
 [package]
-name = "nova_nested_routes"
+name = "example_nova_nested_routes"
 version = "0.0.0"
 edition = "2021"
 publish = false

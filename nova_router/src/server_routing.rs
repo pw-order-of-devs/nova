@@ -11,6 +11,9 @@ pub trait ServerRouting where Self: Clone {
     /// Register new service route
     fn service(&mut self, path: &str, routes: Vec<Route>) -> Self where Self: Sized;
 
+    /// Register fallback route
+    fn fallback<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, f: F) -> Self where Self: Sized;
+
     /// Register new get route
     fn get<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, path: &str, f: F) -> Self where Self: Sized {
         self.route(RequestType::Get, path, f)

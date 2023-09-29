@@ -1,3 +1,4 @@
+use std::fmt::{Debug, Formatter};
 use regex::Regex;
 use nova_core::types::request_type::RequestType;
 
@@ -5,9 +6,10 @@ use crate::callable::{CloneableFn, ServerResponse};
 use crate::route::Route;
 
 /// Nova Router structure
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default)]
 pub struct Router {
     routes: Vec<Route>,
+    fallback: Option<Box<dyn CloneableFn<Output=ServerResponse>>>,
 }
 
 impl Router {
@@ -23,8 +25,24 @@ impl Router {
         self.routes.push(Route::route(r#type, path, f));
     }
 
+    /// register fallback route
+    pub fn register_fallback<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, f: F) {
+        self.fallback = Some(Box::new(f))
+    }
+
+    /// get fallback route
+    pub fn get_fallback(self) -> Option<Box<dyn CloneableFn<Output=ServerResponse>>> {
+        self.fallback
+    }
+
     /// find route for request
-    pub fn match_route(self, route: (RequestType, String)) -> Option<Route> {
-        self.routes.into_iter().find(|r| r.matches(route.0, &route.1))
+    pub fn match_route(&self, route: (RequestType, String)) -> Option<Route> {
+        self.routes.clone().into_iter().find(|r| r.matches(route.0, &route.1))
+    }
+}
+
+impl Debug for Router {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self.routes)
     }
 }
