@@ -11,7 +11,7 @@ use nova_web::server::Server;
 fn hello_world(_: HttpRequest, res: HttpResponse) -> ServerResponse {
     Ok(res
         .status(HttpStatus::OK)
-        .body("Hello World!"))
+        .body("Hello, World!"))
 }
 
 fn error_page(_: HttpRequest, _: HttpResponse) -> ServerResponse {

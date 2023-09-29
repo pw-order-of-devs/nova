@@ -70,13 +70,9 @@ impl Server {
     }
 
     async fn handle_response(stream: &mut TcpStream, request: HttpRequest, router: Router, protocol: Protocol) -> std::io::Result<()> {
-        let fallback = router.clone().get_fallback();
-        match &mut router.match_route(request.get_route_path()) {
-            Some(route) => {
-                let response = HttpResponse::default()
-                    .protocol(protocol);
-                let request = request.update_path(&route.clone().get_path());
-                match route.call(request, response) {
+        match &mut router.match_route(request.get_route_path(), router.clone().get_fallback()) {
+            Some((callable, path)) => {
+                match callable(request.update_path(path), HttpResponse::default().protocol(protocol)) {
                     Ok(response) => stream.write_all(format!("{response}").as_bytes()).await,
                     Err(e) => Self::handle_error(stream, e).await,
                 }

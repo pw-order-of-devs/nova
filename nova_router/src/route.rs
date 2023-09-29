@@ -1,7 +1,5 @@
 use std::fmt::{Debug, Formatter};
 
-use nova_core::request::HttpRequest;
-use nova_core::response::HttpResponse;
 use nova_core::types::request_type::RequestType;
 
 use crate::callable::{BoxedCallable, CloneableFn, ServerResponse};
@@ -56,11 +54,6 @@ impl Route {
         self_segments.into_iter()
             .zip(segments.into_iter())
             .all(|(s, t)| s == t || (s.starts_with('{') && s.ends_with('}')))
-    }
-
-    /// call handler
-    pub fn call(&mut self, request: HttpRequest, response: HttpResponse) -> ServerResponse {
-        (self.f.clone().unwrap())(request, response)
     }
 }
 

@@ -16,10 +16,7 @@ fn hello_query(req: HttpRequest, res: HttpResponse) -> ServerResponse {
 }
 
 fn hello_query_opt(req: HttpRequest, res: HttpResponse) -> ServerResponse {
-    let name = match req.query("name") {
-        Ok(name) => name,
-        Err(_) => "default".to_string(),
-    };
+    let name = req.query("name").unwrap_or("default".to_string());
     Ok(res
         .status(HttpStatus::OK)
         .body(&format!("Hello, {}!", name)))
