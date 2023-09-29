@@ -63,7 +63,7 @@ impl FromStr for HttpRequest {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let parts = s.split("\r\n").collect::<Vec<&str>>();
         let request = parts[0].split(' ').collect::<Vec<&str>>();
-        if request.len() < 3 { return Err(ServerError::ParseRequestError) }
+        if request.len() < 3 { return Err(ServerError::ParseRequestError { message: "request is malformed".to_string() }) }
 
         let protocol = Protocol::from_str(request[2])?;
         let r#type = RequestType::from_str(request[0])?;

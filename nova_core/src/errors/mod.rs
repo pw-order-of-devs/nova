@@ -21,7 +21,10 @@ pub enum ServerError {
     /// Resource Not Found
     NotFound,
     /// ParseRequestError
-    ParseRequestError,
+    ParseRequestError {
+        /// error message
+        message: String,
+    },
     /// UnsupportedRequestType
     UnsupportedRequestType,
 }
@@ -34,7 +37,7 @@ impl Display for ServerError {
             ServerError::InternalError => write!(f, "Internal Error"),
             ServerError::IoError { message } => write!(f, "IO Error: {message}"),
             ServerError::NotFound => write!(f, "Not Found"),
-            ServerError::ParseRequestError => write!(f, "Parse Request Error"),
+            ServerError::ParseRequestError { message } => write!(f, "Parse Request Error: {message}"),
             ServerError::UnsupportedRequestType => write!(f, "Unsupported Request Type"),
         }
     }
@@ -49,7 +52,7 @@ impl From<std::io::Error> for ServerError {
 }
 
 impl From<FromUtf8Error> for ServerError {
-    fn from(_: FromUtf8Error) -> Self {
-        ServerError::ParseRequestError
+    fn from(value: FromUtf8Error) -> Self {
+        ServerError::ParseRequestError { message: value.to_string() }
     }
 }

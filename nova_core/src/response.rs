@@ -29,7 +29,7 @@ impl HttpResponse {
             ServerError::InternalError => (HttpStatus::InternalServerError, "Internal error"),
             ServerError::IoError { .. } => (HttpStatus::InternalServerError, "IO error"),
             ServerError::NotFound { .. } => (HttpStatus::NotFound, "Not Found"),
-            ServerError::ParseRequestError => (HttpStatus::BadRequest, "Bad request"),
+            ServerError::ParseRequestError { .. } => (HttpStatus::BadRequest, "Bad request"),
             ServerError::UnsupportedRequestType => (HttpStatus::MethodNotAllowed, "Unsupported request type"),
         };
         let mut headers = Headers::default();

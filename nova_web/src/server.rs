@@ -47,9 +47,7 @@ impl Server {
 
     /// Start Nova Server
     pub async fn bind(self) -> Result<(), ServerError> {
-        tracing_subscriber::fmt::init();
         let listener = TcpListener::bind(&format!("{}:{}", self.host, self.port)).await?;
-        tracing::info!("nova server listening at {}:{}", self.host, self.port);
         loop {
             let (mut stream, _) = listener.accept().await?;
             let router = self.router.clone();
@@ -67,15 +65,11 @@ impl Server {
         match stream.read(&mut str).await {
             Ok(n) if n == 0 => Err(ServerError::EmptyRequest),
             Ok(_) => HttpRequest::from_str(&String::from_utf8(str.as_slice().to_vec())?),
-            Err(e) => {
-                tracing::error!("failed to read from socket; err = {:?}", e);
-                Err(ServerError::ParseRequestError)
-            }
+            Err(e) => Err(ServerError::ParseRequestError { message: e.to_string() })
         }
     }
 
     async fn handle_response(stream: &mut TcpStream, request: HttpRequest, router: Router, protocol: Protocol) -> std::io::Result<()> {
-        tracing::debug!("incoming request:\n{request}");
         match &mut router.match_route(request.get_route_path()) {
             Some(route) => {
                 let response = HttpResponse::default()
@@ -92,7 +86,6 @@ impl Server {
 
     async fn handle_error(stream: &mut TcpStream, error: ServerError) -> std::io::Result<()> {
         let response = HttpResponse::from_error(error, Protocol::default());
-        tracing::debug!("server response:\n{response}");
         stream.write_all(format!("{response}").as_bytes()).await
     }
 }
