@@ -6,6 +6,9 @@ use crate::types::headers::Headers;
 use crate::types::protocol::Protocol;
 use crate::types::status::HttpStatus;
 
+/// Callable return type
+pub type ServerResponse = Result<HttpResponse, ServerError>;
+
 /// Nova Response definition
 #[derive(Clone, Debug, Default)]
 pub struct HttpResponse {

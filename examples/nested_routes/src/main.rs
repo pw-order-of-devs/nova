@@ -1,13 +1,9 @@
-use nova_core::errors::ServerError;
-use nova_core::request::HttpRequest;
-use nova_core::response::HttpResponse;
-use nova_core::types::status::HttpStatus;
-
-use nova_router::callable::ServerResponse;
-use nova_router::route::{get, service};
-use nova_router::server_routing::ServerRouting;
-
+use nova_web::errors::ServerError;
+use nova_web::routing::{get, ServerRouting, service};
 use nova_web::server::Server;
+use nova_web::types::request::HttpRequest;
+use nova_web::types::response::{HttpResponse, ServerResponse};
+use nova_web::types::status::HttpStatus;
 
 fn hello_world(_: HttpRequest, res: HttpResponse) -> ServerResponse {
     Ok(res

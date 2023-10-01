@@ -1,8 +1,9 @@
 use std::fmt::{Debug, Formatter};
 
+use nova_core::response::ServerResponse;
 use nova_core::types::request_type::RequestType;
 
-use crate::callable::{BoxedCallable, CloneableFn, ServerResponse};
+use crate::callable::{BoxedCallable, CloneableFn};
 
 /// Nova Route structure
 #[derive(Clone)]

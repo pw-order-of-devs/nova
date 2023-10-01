@@ -1,6 +1,7 @@
+use nova_core::response::ServerResponse;
 use nova_core::types::request_type::RequestType;
 
-use crate::callable::{CloneableFn, ServerResponse};
+use crate::callable::CloneableFn;
 use crate::route::Route;
 
 /// Routes registration for server

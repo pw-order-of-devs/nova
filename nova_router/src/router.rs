@@ -1,8 +1,10 @@
 use std::fmt::{Debug, Formatter};
 use regex::Regex;
+
+use nova_core::response::ServerResponse;
 use nova_core::types::request_type::RequestType;
 
-use crate::callable::{BoxedCallable, CloneableFn, ServerResponse};
+use crate::callable::{BoxedCallable, CloneableFn};
 use crate::route::Route;
 
 /// Nova Router structure

@@ -14,6 +14,6 @@ name = "nova_web"
 path = "src/lib.rs"
 
 [dependencies]
-nova_core = { path = "../nova_core" }
-nova_router = { path = "../nova_router" }
+nova_core = { path = "../nova_core", optional = true }
+nova_router = { path = "../nova_router", optional = true }
 tokio = { version = "1.32", features = ["full"] }

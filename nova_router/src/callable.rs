@@ -1,9 +1,6 @@
-use nova_core::errors::ServerError;
 use nova_core::request::HttpRequest;
-use nova_core::response::HttpResponse;
+use nova_core::response::{HttpResponse, ServerResponse};
 
-/// Callable return type
-pub type ServerResponse = Result<HttpResponse, ServerError>;
 /// CallableType
 pub type BoxedCallable = Box<dyn CloneableFn<Output=ServerResponse> + 'static>;
 
