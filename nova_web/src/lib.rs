@@ -13,3 +13,7 @@ pub mod core;
 
 /// nova routing
 pub mod routing;
+
+/// nova hello_serde integration
+#[cfg(feature = "serde")]
+pub mod serde;

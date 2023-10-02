@@ -31,7 +31,7 @@ impl HashMapExt for Headers {
     }
 
     fn from_str(str: &str) -> Result<Self, ServerError>  {
-        let inner = str.split(' ')
+        let inner = str.split("\r\n")
             .filter(|item| item.contains(": "))
             .map(|item| {
                 let item = item.split(": ").collect::<Vec<&str>>();

@@ -22,6 +22,11 @@ pub struct HttpRequest {
 }
 
 impl HttpRequest {
+    /// extract body_string
+    pub fn body_string(&self) -> String {
+        self.body.clone()
+    }
+
     /// extract route details
     pub fn get_route_path(&self) -> (RequestType, String) {
         (self.clone().r#type, self.clone().target)
@@ -65,20 +70,28 @@ impl FromStr for HttpRequest {
         let request = parts[0].split(' ').collect::<Vec<&str>>();
         if request.len() < 3 { return Err(ServerError::ParseRequestError { message: "request is malformed".to_string() }) }
 
-        let protocol = Protocol::from_str(request[2])?;
         let r#type = RequestType::from_str(request[0])?;
         let target = request[1].to_string();
+        let protocol = Protocol::from_str(request[2])?;
+
         let query_pos = target.chars().position(|i| i == '?');
         let (target, query) =
             if let Some(pos) = query_pos { (target[.. pos].to_string(), Query::from_str(&target[pos + 1..])?) }
             else { (target, Query::default()) };
-        let headers = Headers::from_str(parts[0])?;
+
+        let headers_pos = parts.iter().position(|item| item.is_empty()).unwrap_or(parts.len() - 1);
+        let headers = Headers::from_str(&parts[1 .. headers_pos].to_vec().join("\r\n"))?;
+        let body = parts[headers_pos + 1 .. parts.len()].to_vec().iter()
+            .map(|s| s.to_string())
+            .collect::<Vec<String>>()
+            .join("\r\n").chars()
+            .filter(|&i| i != '\0')
+            .collect();
 
         Ok(HttpRequest {
             r#type, target, protocol, query,
             path: Default::default(),
-            body: "".to_string(),
-            headers,
+            body, headers,
         })
     }
 }

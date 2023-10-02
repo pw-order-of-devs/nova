@@ -13,5 +13,8 @@ pub mod response;
 /// nova types
 pub mod types;
 
+/// nova hello_serde integration
+pub mod serde;
+
 /// extensions
 pub(crate) mod ext;
