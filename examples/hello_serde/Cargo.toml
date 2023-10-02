@@ -6,5 +6,5 @@ publish = false
 
 [dependencies]
 nova_web = { path = "../../nova_web", features = ["serde"] }
-serde = { version = "1.0", features = ["derive"] }
 tokio = "1.32"
+serde = { version = "1.0", features = ["derive"] }

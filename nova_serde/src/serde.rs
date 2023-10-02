@@ -1,6 +1,4 @@
-pub use {
-    serde::{Deserialize, Serialize},
-};
+pub use serde::{Deserialize, Serialize};
 
 /// Define the SerdeRequest trait
 pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {

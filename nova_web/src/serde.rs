@@ -1,3 +1,3 @@
 pub use {
-    nova_core::serde::{Deserialize, Serialize, SerdeRequest},
+    nova_serde::serde::{Deserialize, Serialize, SerdeRequest},
 };

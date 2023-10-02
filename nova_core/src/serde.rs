@@ -1,4 +1,4 @@
-pub use nova_serde::serde::{Deserialize, Serialize, SerdeRequest};
+use nova_serde::serde::{Deserialize, SerdeRequest};
 
 use crate::errors::ServerError;
 use crate::request::HttpRequest;
