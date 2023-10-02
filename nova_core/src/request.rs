@@ -37,7 +37,7 @@ impl HttpRequest {
         let self_segments = self.target.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
         let segments = route.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
         let inner = self_segments.into_iter()
-            .zip(segments.into_iter())
+            .zip(segments)
             .filter(|(_, t)| (t.starts_with('{') && t.ends_with('}')))
             .map(|(s, t)| (t[1 .. t.len() - 1].to_string(), s.to_string()))
             .collect();

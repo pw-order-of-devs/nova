@@ -53,7 +53,7 @@ impl Route {
         let segments = path.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
         if self_segments.len() != segments.len() { return false }
         self_segments.into_iter()
-            .zip(segments.into_iter())
+            .zip(segments)
             .all(|(s, t)| s == t || (s.starts_with('{') && s.ends_with('}')))
     }
 }
