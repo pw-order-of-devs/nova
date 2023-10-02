@@ -10,7 +10,7 @@ use crate::types::query::Query;
 use crate::types::request_type::RequestType;
 
 /// Nova Request definition
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct HttpRequest {
     r#type: RequestType,
     target: String,

@@ -4,10 +4,10 @@ use std::str::FromStr;
 use crate::errors::ServerError;
 
 /// http request type
-#[derive(Clone, Copy, Debug, Ord, PartialOrd, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Ord, PartialOrd, Eq, PartialEq)]
 pub enum RequestType {
     /// HTTP::GET
-    Get,
+    #[default] Get,
     /// HTTP::HEAD
     Head,
     /// HTTP::OPTIONS
