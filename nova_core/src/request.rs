@@ -12,37 +12,19 @@ use crate::types::request_type::RequestType;
 /// Nova Request definition
 #[derive(Clone, Debug, Default)]
 pub struct HttpRequest {
-    r#type: RequestType,
-    target: String,
-    protocol: Protocol,
-    query: Query,
-    path: Path,
-    body: String,
-    headers: Headers,
+    pub(crate) r#type: RequestType,
+    pub(crate) target: String,
+    pub(crate) protocol: Protocol,
+    pub(crate) query: Query,
+    pub(crate) path: Path,
+    pub(crate) body: String,
+    pub(crate) headers: Headers,
 }
 
 impl HttpRequest {
     /// extract body_string
     pub fn body_string(&self) -> String {
         self.body.clone()
-    }
-
-    /// extract route details
-    pub fn get_route_path(&self) -> (RequestType, String) {
-        (self.clone().r#type, self.clone().target)
-    }
-
-    /// update path map from route
-    pub fn update_path(mut self, route: &str) -> Self {
-        let self_segments = self.target.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
-        let segments = route.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
-        let inner = self_segments.into_iter()
-            .zip(segments)
-            .filter(|(_, t)| (t.starts_with('{') && t.ends_with('}')))
-            .map(|(s, t)| (t[1 .. t.len() - 1].to_string(), s.to_string()))
-            .collect();
-        self.path = Path::new(inner);
-        self
     }
 
     /// get path by key
@@ -59,6 +41,16 @@ impl HttpRequest {
             Some(item) => Ok(item.clone()),
             None => Err(ServerError::BadRequest { message: format!("query item \"{key}\" is missing") }),
         }
+    }
+
+    /// get headers map
+    pub fn headers(&self) -> Headers {
+        self.clone().headers
+    }
+
+    /// get header by key
+    pub fn header(&self, key: &str) -> Option<String> {
+        self.headers.get(key)
     }
 }
 

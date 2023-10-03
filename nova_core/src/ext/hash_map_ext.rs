@@ -10,6 +10,13 @@ pub(crate) trait HashMapExt {
         self.get_inner().keys().any(|k| k.to_lowercase() == key.to_lowercase())
     }
 
+    fn get(&self, key: &str) -> Option<String> {
+        match self.get_inner().get(key) {
+            Some(item) => Some(item.to_string()),
+            None => None,
+        }
+    }
+
     fn insert(&mut self, _: &str, _: &str) {
         todo!()
     }

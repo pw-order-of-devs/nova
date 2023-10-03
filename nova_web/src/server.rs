@@ -4,6 +4,7 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
 use nova_core::errors::ServerError;
+use nova_core::ext::request_ext::RequestExt;
 use nova_core::request::HttpRequest;
 use nova_core::response::HttpResponse;
 use nova_core::types::protocol::Protocol;

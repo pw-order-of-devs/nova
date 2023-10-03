@@ -17,4 +17,4 @@ pub mod types;
 pub mod serde;
 
 /// extensions
-pub(crate) mod ext;
+pub mod ext;
