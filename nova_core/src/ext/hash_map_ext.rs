@@ -11,10 +11,7 @@ pub(crate) trait HashMapExt {
     }
 
     fn get(&self, key: &str) -> Option<String> {
-        match self.get_inner().get(key) {
-            Some(item) => Some(item.to_string()),
-            None => None,
-        }
+        self.get_inner().get(key).map(|item| item.to_string())
     }
 
     fn insert(&mut self, _: &str, _: &str) {
