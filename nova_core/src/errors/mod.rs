@@ -37,7 +37,9 @@ impl Display for ServerError {
             ServerError::InternalError => write!(f, "Internal Error"),
             ServerError::IoError { message } => write!(f, "IO Error: {message}"),
             ServerError::NotFound => write!(f, "Not Found"),
-            ServerError::ParseRequestError { message } => write!(f, "Parse Request Error: {message}"),
+            ServerError::ParseRequestError { message } => {
+                write!(f, "Parse Request Error: {message}")
+            }
             ServerError::UnsupportedRequestType => write!(f, "Unsupported Request Type"),
         }
     }
@@ -47,12 +49,16 @@ impl std::error::Error for ServerError {}
 
 impl From<std::io::Error> for ServerError {
     fn from(value: std::io::Error) -> Self {
-        ServerError::IoError { message: value.to_string() }
+        ServerError::IoError {
+            message: value.to_string(),
+        }
     }
 }
 
 impl From<FromUtf8Error> for ServerError {
     fn from(value: FromUtf8Error) -> Self {
-        ServerError::ParseRequestError { message: value.to_string() }
+        ServerError::ParseRequestError {
+            message: value.to_string(),
+        }
     }
 }

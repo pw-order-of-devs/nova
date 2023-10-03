@@ -1,3 +1,1 @@
-pub use {
-    nova_serde::serde::{Deserialize, Serialize, SerdeRequest},
-};
+pub use nova_serde::serde::{Deserialize, SerdeRequest, Serialize};

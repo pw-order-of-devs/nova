@@ -1,9 +1,9 @@
 use nova_web::core::errors::ServerError;
-use nova_web::routing::ServerRouting;
-use nova_web::server::Server;
 use nova_web::core::types::request::HttpRequest;
 use nova_web::core::types::response::{HttpResponse, ServerResponse};
 use nova_web::core::types::status::HttpStatus;
+use nova_web::routing::ServerRouting;
+use nova_web::server::Server;
 
 fn hello_query(req: HttpRequest, res: HttpResponse) -> ServerResponse {
     let name = req.query("name")?;
@@ -24,5 +24,6 @@ async fn main() -> Result<(), ServerError> {
     Server::create("0.0.0.0", 8181)
         .get("/hello", hello_query)
         .get("/hello/opt", hello_query_opt)
-        .bind().await
+        .bind()
+        .await
 }

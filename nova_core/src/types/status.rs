@@ -12,7 +12,8 @@ pub enum HttpStatus {
     /// Http Status 103: Early Hints
     EarlyHints,
     /// Http Status 200: OK
-    #[default] OK,
+    #[default]
+    OK,
     /// Http Status 201: Created
     Created,
     /// Http Status 202: Accepted
@@ -130,7 +131,7 @@ pub enum HttpStatus {
     /// Http Status 510: Not Extended
     NotExtended,
     /// Http Status 511: Network Authentication Required
-    NetworkAuthenticationRequired
+    NetworkAuthenticationRequired,
 }
 
 impl Display for HttpStatus {
@@ -143,7 +144,9 @@ impl Display for HttpStatus {
             HttpStatus::OK => write!(f, "200 Ok"),
             HttpStatus::Created => write!(f, "201 Created"),
             HttpStatus::Accepted => write!(f, "202 Accepted"),
-            HttpStatus::NonAuthoritativeInformation => write!(f, "203 Non-Authoritative Information"),
+            HttpStatus::NonAuthoritativeInformation => {
+                write!(f, "203 Non-Authoritative Information")
+            }
             HttpStatus::NoContent => write!(f, "204 No Content"),
             HttpStatus::ResetContent => write!(f, "205 Reset Content"),
             HttpStatus::PartialContent => write!(f, "206 Partial Content"),
@@ -164,7 +167,9 @@ impl Display for HttpStatus {
             HttpStatus::NotFound => write!(f, "404 Not Found"),
             HttpStatus::MethodNotAllowed => write!(f, "405 Method Not Allowed"),
             HttpStatus::NotAcceptable => write!(f, "406 Not Acceptable"),
-            HttpStatus::ProxyAuthenticationRequired => write!(f, "407 Proxy Authentication Required"),
+            HttpStatus::ProxyAuthenticationRequired => {
+                write!(f, "407 Proxy Authentication Required")
+            }
             HttpStatus::RequestTimeout => write!(f, "408 Request Timeout"),
             HttpStatus::Conflict => write!(f, "409 Conflict"),
             HttpStatus::Gone => write!(f, "410 Gone"),
@@ -173,7 +178,9 @@ impl Display for HttpStatus {
             HttpStatus::RequestEntityTooLarge => write!(f, "413 Request Entity Too Large"),
             HttpStatus::RequestURITooLong => write!(f, "414 Request-URI Too Long"),
             HttpStatus::UnsupportedMediaType => write!(f, "415 Unsupported Media Type"),
-            HttpStatus::RequestedRangeNotSatisfiable => write!(f, "416 Requested Range Not Satisfiable"),
+            HttpStatus::RequestedRangeNotSatisfiable => {
+                write!(f, "416 Requested Range Not Satisfiable")
+            }
             HttpStatus::ExpectationFailed => write!(f, "417 Expectation Failed"),
             HttpStatus::ImATeapot => write!(f, "418 I'm a teapot"),
             HttpStatus::EnhanceYourCalm => write!(f, "420 Enhance Your Calm"),
@@ -185,10 +192,16 @@ impl Display for HttpStatus {
             HttpStatus::UpgradeRequired => write!(f, "426 Upgrade Required"),
             HttpStatus::PreconditionRequired => write!(f, "428 Precondition Required"),
             HttpStatus::TooManyRequests => write!(f, "429 Too Many Requests"),
-            HttpStatus::RequestHeaderFieldsTooLarge => write!(f, "431 Request Header Fields Too Large"),
+            HttpStatus::RequestHeaderFieldsTooLarge => {
+                write!(f, "431 Request Header Fields Too Large")
+            }
             HttpStatus::NoResponse => write!(f, "444 No Response"),
-            HttpStatus::BlockedByWindowsParentalControls => write!(f, "450 Blocked By Windows Parental Controls"),
-            HttpStatus::UnavailableForLegalReasons => write!(f, "451 Unavailable For Legal Reasons"),
+            HttpStatus::BlockedByWindowsParentalControls => {
+                write!(f, "450 Blocked By Windows Parental Controls")
+            }
+            HttpStatus::UnavailableForLegalReasons => {
+                write!(f, "451 Unavailable For Legal Reasons")
+            }
             HttpStatus::InternalServerError => write!(f, "500 Internal Server Error"),
             HttpStatus::NotImplemented => write!(f, "501 Not Implemented"),
             HttpStatus::BadGateway => write!(f, "502 Bad Gateway"),
@@ -199,7 +212,9 @@ impl Display for HttpStatus {
             HttpStatus::InsufficientStorage => write!(f, "507 Insufficient Storage"),
             HttpStatus::LoopDetected => write!(f, "508 Loop Detected"),
             HttpStatus::NotExtended => write!(f, "510 Not Extended"),
-            HttpStatus::NetworkAuthenticationRequired => write!(f, "511 Network Authentication Required"),
+            HttpStatus::NetworkAuthenticationRequired => {
+                write!(f, "511 Network Authentication Required")
+            }
         }
     }
 }

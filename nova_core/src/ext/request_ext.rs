@@ -12,18 +12,25 @@ pub trait RequestExt {
 }
 
 impl RequestExt for HttpRequest {
-
     fn get_route_path(&self) -> (RequestType, String) {
         (self.clone().r#type, self.clone().target)
     }
 
     fn update_path(mut self, route: &str) -> Self {
-        let self_segments = self.target.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
-        let segments = route.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
-        let inner = self_segments.into_iter()
+        let self_segments = self
+            .target
+            .split('/')
+            .filter(|s| !s.is_empty())
+            .collect::<Vec<&str>>();
+        let segments = route
+            .split('/')
+            .filter(|s| !s.is_empty())
+            .collect::<Vec<&str>>();
+        let inner = self_segments
+            .into_iter()
             .zip(segments)
             .filter(|(_, t)| (t.starts_with('{') && t.ends_with('}')))
-            .map(|(s, t)| (t[1 .. t.len() - 1].to_string(), s.to_string()))
+            .map(|(s, t)| (t[1..t.len() - 1].to_string(), s.to_string()))
             .collect();
         self.path = Path::new(inner);
         self

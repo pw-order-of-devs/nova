@@ -1,5 +1,5 @@
-use std::fmt::{Debug, Formatter};
 use regex::Regex;
+use std::fmt::{Debug, Formatter};
 
 use nova_core::response::ServerResponse;
 use nova_core::types::request_type::RequestType;
@@ -16,7 +16,12 @@ pub struct Router {
 
 impl Router {
     /// register new route
-    pub fn register<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, r#type: RequestType, path: &str, f: F) {
+    pub fn register<F: CloneableFn<Output = ServerResponse> + 'static>(
+        &mut self,
+        r#type: RequestType,
+        path: &str,
+        f: F,
+    ) {
         if self.routes.iter().any(|r| r.clone().get_path() == path) {
             return;
         }
@@ -28,7 +33,7 @@ impl Router {
     }
 
     /// register fallback route
-    pub fn register_fallback<F: CloneableFn<Output=ServerResponse> + 'static>(&mut self, f: F) {
+    pub fn register_fallback<F: CloneableFn<Output = ServerResponse> + 'static>(&mut self, f: F) {
         self.fallback = Some(Box::new(f))
     }
 
@@ -38,8 +43,17 @@ impl Router {
     }
 
     /// find route for request
-    pub fn match_route(&self, route: (RequestType, String), fallback: Option<BoxedCallable>) -> Option<(BoxedCallable, String)> {
-        if let Some(route) = self.routes.clone().into_iter().find(|r| r.matches(route.0, &route.1)) {
+    pub fn match_route(
+        &self,
+        route: (RequestType, String),
+        fallback: Option<BoxedCallable>,
+    ) -> Option<(BoxedCallable, String)> {
+        if let Some(route) = self
+            .routes
+            .clone()
+            .into_iter()
+            .find(|r| r.matches(route.0, &route.1))
+        {
             Some((route.clone().get_callable().unwrap(), route.get_path()))
         } else {
             fallback.map(|f| (f, "".to_string()))

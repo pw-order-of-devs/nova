@@ -1,0 +1,91 @@
+name: default build
+
+on:
+  push:
+    branches: '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          cache: true
+      - name: build nova modules
+        run: cargo build --release --package "nova_*"
+
+  build_examples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          cache: true
+      - name: build example modules
+        run: cargo build --release --package "example_*"
+
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          cache: true
+      - name: lint
+        run: |
+          rustup component add clippy
+          cargo clippy --all-targets --all-features -- -D warnings
+      - name: fmt
+        run: |
+          rustup component add rustfmt
+          cargo fmt --all --check
+
+  quality:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          cache: true
+      - name: tests
+        run: |
+          cargo check
+          cargo test --all-features --no-fail-fast
+
+  coverage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          cache: true
+      - name: coverage
+        run: |
+          cargo install cargo-tarpaulin 
+          cargo tarpaulin --out html -- --test-threads 1
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: tarpaulin-report.html
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          cache: true
+      - run: |
+          cargo install cargo-audit
+          cargo audit

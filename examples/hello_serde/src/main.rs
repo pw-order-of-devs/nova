@@ -3,11 +3,14 @@ use nova_web::core::types::request::HttpRequest;
 use nova_web::core::types::response::{HttpResponse, ServerResponse};
 use nova_web::core::types::status::HttpStatus;
 use nova_web::routing::ServerRouting;
-use nova_web::serde::{Deserialize, Serialize, SerdeRequest};
+use nova_web::serde::{Deserialize, SerdeRequest, Serialize};
 use nova_web::server::Server;
 
 #[derive(Debug, Deserialize, Serialize)]
-struct RequestBody { id: String, name: String }
+struct RequestBody {
+    id: String,
+    name: String,
+}
 
 fn hello_json(req: HttpRequest, res: HttpResponse) -> ServerResponse {
     let body: RequestBody = req.json()?;
@@ -44,5 +47,6 @@ async fn main() -> Result<(), ServerError> {
         .post("/hello/form", hello_form)
         .post("/hello/form/urlencoded", hello_form_urlencoded)
         .post("/hello/xml", hello_xml)
-        .bind().await
+        .bind()
+        .await
 }

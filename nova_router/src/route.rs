@@ -18,12 +18,26 @@ pub struct Route {
 impl Route {
     /// create new service route
     pub fn service(path: &str, routes: Vec<Route>) -> Self {
-        Self { r#type: RequestType::Get, path: path.to_string(), f: None, routes, }
+        Self {
+            r#type: RequestType::Get,
+            path: path.to_string(),
+            f: None,
+            routes,
+        }
     }
 
     /// create new route
-    pub fn route<F: CloneableFn<Output=ServerResponse> + 'static>(r#type: RequestType, path: &str, f: F) -> Self {
-        Self { r#type, path: path.to_string(), f: Some(Box::new(f)), routes: vec![], }
+    pub fn route<F: CloneableFn<Output = ServerResponse> + 'static>(
+        r#type: RequestType,
+        path: &str,
+        f: F,
+    ) -> Self {
+        Self {
+            r#type,
+            path: path.to_string(),
+            f: Some(Box::new(f)),
+            routes: vec![],
+        }
     }
 
     /// get request type
@@ -48,11 +62,23 @@ impl Route {
 
     /// check if route matches predicate
     pub fn matches(&self, r#type: RequestType, path: &str) -> bool {
-        if self.r#type != r#type { return false }
-        let self_segments = self.path.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
-        let segments = path.split('/').filter(|s| !s.is_empty()).collect::<Vec<&str>>();
-        if self_segments.len() != segments.len() { return false }
-        self_segments.into_iter()
+        if self.r#type != r#type {
+            return false;
+        }
+        let self_segments = self
+            .path
+            .split('/')
+            .filter(|s| !s.is_empty())
+            .collect::<Vec<&str>>();
+        let segments = path
+            .split('/')
+            .filter(|s| !s.is_empty())
+            .collect::<Vec<&str>>();
+        if self_segments.len() != segments.len() {
+            return false;
+        }
+        self_segments
+            .into_iter()
             .zip(segments)
             .all(|(s, t)| s == t || (s.starts_with('{') && s.ends_with('}')))
     }
@@ -70,26 +96,26 @@ pub fn service(path: &str, routes: Vec<Route>) -> Route {
 }
 
 /// Create GET route
-pub fn get<F: CloneableFn<Output=ServerResponse> + 'static>(path: &str, f: F) -> Route {
+pub fn get<F: CloneableFn<Output = ServerResponse> + 'static>(path: &str, f: F) -> Route {
     Route::route(RequestType::Get, path, f)
 }
 
 /// Create POST route
-pub fn post<F: CloneableFn<Output=ServerResponse> + 'static>(path: &str, f: F) -> Route {
+pub fn post<F: CloneableFn<Output = ServerResponse> + 'static>(path: &str, f: F) -> Route {
     Route::route(RequestType::Post, path, f)
 }
 
 /// Create PUT route
-pub fn put<F: CloneableFn<Output=ServerResponse> + 'static>(path: &str, f: F) -> Route {
+pub fn put<F: CloneableFn<Output = ServerResponse> + 'static>(path: &str, f: F) -> Route {
     Route::route(RequestType::Put, path, f)
 }
 
 /// Create PATCH route
-pub fn patch<F: CloneableFn<Output=ServerResponse> + 'static>(path: &str, f: F) -> Route {
+pub fn patch<F: CloneableFn<Output = ServerResponse> + 'static>(path: &str, f: F) -> Route {
     Route::route(RequestType::Patch, path, f)
 }
 
 /// Create DELETE route
-pub fn delete<F: CloneableFn<Output=ServerResponse> + 'static>(path: &str, f: F) -> Route {
+pub fn delete<F: CloneableFn<Output = ServerResponse> + 'static>(path: &str, f: F) -> Route {
     Route::route(RequestType::Delete, path, f)
 }

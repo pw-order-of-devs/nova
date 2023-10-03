@@ -21,7 +21,12 @@ pub struct HttpResponse {
 impl HttpResponse {
     /// Create new HttpResponse
     pub fn new(status: HttpStatus, body: &str, headers: Headers, protocol: Protocol) -> Self {
-        HttpResponse { protocol, status, body: body.to_string(), headers, }
+        HttpResponse {
+            protocol,
+            status,
+            body: body.to_string(),
+            headers,
+        }
     }
 
     /// Build Nova Response from NovaError
@@ -33,12 +38,19 @@ impl HttpResponse {
             ServerError::IoError { .. } => (HttpStatus::InternalServerError, "IO error"),
             ServerError::NotFound { .. } => (HttpStatus::NotFound, "Not Found"),
             ServerError::ParseRequestError { .. } => (HttpStatus::BadRequest, "Bad request"),
-            ServerError::UnsupportedRequestType => (HttpStatus::MethodNotAllowed, "Unsupported request type"),
+            ServerError::UnsupportedRequestType => {
+                (HttpStatus::MethodNotAllowed, "Unsupported request type")
+            }
         };
         let mut headers = Headers::default();
         headers.insert("Content-length", &body.len().to_string());
 
-        HttpResponse { protocol, status, body: body.to_string(), headers, }
+        HttpResponse {
+            protocol,
+            status,
+            body: body.to_string(),
+            headers,
+        }
     }
 
     /// set response protocol
@@ -73,9 +85,12 @@ impl HttpResponse {
 
     /// append default headers if not present
     pub fn append_default_headers(mut self) -> Self {
-        self.headers.insert_if_not_exists("Content-Length", &self.body.len().to_string());
-        self.headers.insert_if_not_exists("Content-Type", "text/plain; charset=utf-8");
-        self.headers.insert_if_not_exists("Date", &chrono::Utc::now().to_rfc2822());
+        self.headers
+            .insert_if_not_exists("Content-Length", &self.body.len().to_string());
+        self.headers
+            .insert_if_not_exists("Content-Type", "text/plain; charset=utf-8");
+        self.headers
+            .insert_if_not_exists("Date", &chrono::Utc::now().to_rfc2822());
         self.clone()
     }
 }
@@ -84,10 +99,17 @@ impl Display for HttpResponse {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let mut errors = vec![];
         errors.push(write!(f, "{} {}", self.protocol, self.status));
-        if !self.headers.is_empty() { errors.push(write!(f, "\r\n{}", self.headers)); }
-        if !self.body.is_empty() { errors.push(write!(f, "\r\n\r\n{}", self.body)); }
+        if !self.headers.is_empty() {
+            errors.push(write!(f, "\r\n{}", self.headers));
+        }
+        if !self.body.is_empty() {
+            errors.push(write!(f, "\r\n\r\n{}", self.body));
+        }
 
-        if !errors.is_empty() { errors[0] }
-        else { Ok(()) }
+        if !errors.is_empty() {
+            errors[0]
+        } else {
+            Ok(())
+        }
     }
 }

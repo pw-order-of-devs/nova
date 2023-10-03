@@ -7,7 +7,8 @@ use crate::errors::ServerError;
 #[derive(Clone, Copy, Debug, Default, Ord, PartialOrd, Eq, PartialEq)]
 pub enum RequestType {
     /// HTTP::GET
-    #[default] Get,
+    #[default]
+    Get,
     /// HTTP::HEAD
     Head,
     /// HTTP::OPTIONS
@@ -41,14 +42,18 @@ impl FromStr for RequestType {
 
 impl Display for RequestType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            RequestType::Get => "GET",
-            RequestType::Head => "HEAD",
-            RequestType::Options => "OPTIONS",
-            RequestType::Post => "POST",
-            RequestType::Put => "PUT",
-            RequestType::Patch => "PATCH",
-            RequestType::Delete => "DELETE",
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                RequestType::Get => "GET",
+                RequestType::Head => "HEAD",
+                RequestType::Options => "OPTIONS",
+                RequestType::Post => "POST",
+                RequestType::Put => "PUT",
+                RequestType::Patch => "PATCH",
+                RequestType::Delete => "DELETE",
+            }
+        )
     }
 }

@@ -7,7 +7,8 @@ use crate::errors::ServerError;
 #[derive(Clone, Copy, Debug, Default)]
 pub enum Protocol {
     /// HTTP/1.1 protocol
-    #[default] Http1,
+    #[default]
+    Http1,
     /// HTTP/2 protocol
     Http2,
 }

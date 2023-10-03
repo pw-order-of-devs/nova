@@ -31,7 +31,9 @@ impl HttpRequest {
     pub fn path(&self, key: &str) -> Result<String, ServerError> {
         match self.path.get_inner().get(key) {
             Some(item) => Ok(item.clone()),
-            None => Err(ServerError::BadRequest { message: format!("path item \"{key}\" is missing") }),
+            None => Err(ServerError::BadRequest {
+                message: format!("path item \"{key}\" is missing"),
+            }),
         }
     }
 
@@ -39,7 +41,9 @@ impl HttpRequest {
     pub fn query(&self, key: &str) -> Result<String, ServerError> {
         match self.query.get_inner().get(key) {
             Some(item) => Ok(item.clone()),
-            None => Err(ServerError::BadRequest { message: format!("query item \"{key}\" is missing") }),
+            None => Err(ServerError::BadRequest {
+                message: format!("query item \"{key}\" is missing"),
+            }),
         }
     }
 
@@ -60,30 +64,49 @@ impl FromStr for HttpRequest {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let parts = s.split("\r\n").collect::<Vec<&str>>();
         let request = parts[0].split(' ').collect::<Vec<&str>>();
-        if request.len() < 3 { return Err(ServerError::ParseRequestError { message: "request is malformed".to_string() }) }
+        if request.len() < 3 {
+            return Err(ServerError::ParseRequestError {
+                message: "request is malformed".to_string(),
+            });
+        }
 
         let r#type = RequestType::from_str(request[0])?;
         let target = request[1].to_string();
         let protocol = Protocol::from_str(request[2])?;
 
         let query_pos = target.chars().position(|i| i == '?');
-        let (target, query) =
-            if let Some(pos) = query_pos { (target[.. pos].to_string(), Query::from_str(&target[pos + 1..])?) }
-            else { (target, Query::default()) };
+        let (target, query) = if let Some(pos) = query_pos {
+            (
+                target[..pos].to_string(),
+                Query::from_str(&target[pos + 1..])?,
+            )
+        } else {
+            (target, Query::default())
+        };
 
-        let headers_pos = parts.iter().position(|item| item.is_empty()).unwrap_or(parts.len() - 1);
-        let headers = Headers::from_str(&parts[1 .. headers_pos].to_vec().join("\r\n"))?;
-        let body = parts[headers_pos + 1 .. parts.len()].to_vec().iter()
+        let headers_pos = parts
+            .iter()
+            .position(|item| item.is_empty())
+            .unwrap_or(parts.len() - 1);
+        let headers = Headers::from_str(&parts[1..headers_pos].to_vec().join("\r\n"))?;
+        let body = parts[headers_pos + 1..parts.len()]
+            .to_vec()
+            .iter()
             .map(|s| s.to_string())
             .collect::<Vec<String>>()
-            .join("\r\n").chars()
+            .join("\r\n")
+            .chars()
             .filter(|&i| i != '\0')
             .collect();
 
         Ok(HttpRequest {
-            r#type, target, protocol, query,
+            r#type,
+            target,
+            protocol,
+            query,
             path: Default::default(),
-            body, headers,
+            body,
+            headers,
         })
     }
 }
@@ -91,11 +114,22 @@ impl FromStr for HttpRequest {
 impl Display for HttpRequest {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let mut errors = vec![];
-        errors.push(write!(f, "{} {} {}", self.r#type, self.target, self.protocol));
-        if !self.headers.is_empty() { errors.push(write!(f, "\r\nHeaders: \r\n{}", self.headers)); }
-        if !self.body.is_empty() { errors.push(write!(f, "\r\nBody: \r\n{}", self.body)); }
+        errors.push(write!(
+            f,
+            "{} {} {}",
+            self.r#type, self.target, self.protocol
+        ));
+        if !self.headers.is_empty() {
+            errors.push(write!(f, "\r\nHeaders: \r\n{}", self.headers));
+        }
+        if !self.body.is_empty() {
+            errors.push(write!(f, "\r\nBody: \r\n{}", self.body));
+        }
 
-        if !errors.is_empty() { errors[0] }
-        else { Ok(()) }
+        if !errors.is_empty() {
+            errors[0]
+        } else {
+            Ok(())
+        }
     }
 }
