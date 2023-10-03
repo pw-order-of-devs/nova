@@ -5,4 +5,4 @@ Cargo.lock
 *.pdb
 /scripts
 /target
-./idea
+.idea
