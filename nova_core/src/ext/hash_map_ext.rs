@@ -11,7 +11,9 @@ pub(crate) trait HashMapExt {
     }
 
     fn get(&self, key: &str) -> Option<String> {
-        self.get_inner().get(key).map(|item| item.to_string())
+        self.get_inner().iter()
+            .find(|(k, _)| key.to_lowercase() == k.to_lowercase())
+            .map(|item| item.1.to_string())
     }
 
     fn insert(&mut self, _: &str, _: &str) {
