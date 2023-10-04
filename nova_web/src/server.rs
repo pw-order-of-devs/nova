@@ -8,7 +8,6 @@ use nova_core::ext::request_ext::RequestExt;
 use nova_core::request::HttpRequest;
 use nova_core::response::HttpResponse;
 use nova_core::types::protocol::Protocol;
-
 use nova_router::router::Router;
 
 /// Nova server structure
@@ -67,14 +66,27 @@ impl Server {
     }
 
     async fn handle_request(stream: &mut TcpStream) -> Result<HttpRequest, ServerError> {
-        let mut str = [0u8; 8192];
-        match stream.read(&mut str).await {
-            Ok(n) if n == 0 => Err(ServerError::EmptyRequest),
-            Ok(_) => HttpRequest::from_str(&String::from_utf8(str.as_slice().to_vec())?),
-            Err(e) => Err(ServerError::ParseRequestError {
-                message: e.to_string(),
-            }),
+        let mut buf = Vec::new();
+        loop {
+            let mut str = [0u8; 1024];
+            let n = stream.read(&mut str).await;
+            match n {
+                Ok(n) if n == 0 => break,
+                Ok(n) => {
+                    buf.push(str.as_slice().to_vec());
+                    if n < 1024 {
+                        break;
+                    }
+                }
+                Err(e) => {
+                    return Err(ServerError::ParseRequestError {
+                        message: e.to_string(),
+                    })
+                }
+            }
         }
+
+        HttpRequest::from_str(&String::from_utf8(buf.into_iter().flatten().collect())?)
     }
 
     async fn handle_response(

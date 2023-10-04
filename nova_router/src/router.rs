@@ -1,5 +1,6 @@
-use regex::Regex;
 use std::fmt::{Debug, Formatter};
+
+use regex::Regex;
 
 use nova_core::response::ServerResponse;
 use nova_core::types::request_type::RequestType;
@@ -22,9 +23,14 @@ impl Router {
         path: &str,
         f: F,
     ) {
-        if self.routes.iter().any(|r| r.clone().get_path() == path) {
+        if self
+            .routes
+            .iter()
+            .any(|r| r.clone().get_type() == r#type && r.clone().get_path() == path)
+        {
             return;
         }
+
         let pattern = r"^/([a-zA-Z0-9_]+(/([a-zA-Z0-9_]+|\{[a-zA-Z0-9_]+\}))*/?)?$";
         if !Regex::new(pattern).unwrap().is_match(path) {
             return;
