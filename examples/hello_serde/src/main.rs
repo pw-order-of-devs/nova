@@ -2,7 +2,7 @@ use nova_web::core::errors::ServerError;
 use nova_web::core::types::request::HttpRequest;
 use nova_web::core::types::response::{HttpResponse, ServerResponse};
 use nova_web::core::types::status::HttpStatus;
-use nova_web::routing::ServerRouting;
+use nova_web::routing::{post, ServerRouting};
 use nova_web::serde::{Deserialize, SerdeRequest, Serialize};
 use nova_web::server::Server;
 
@@ -43,10 +43,16 @@ fn hello_xml(req: HttpRequest, res: HttpResponse) -> ServerResponse {
 #[tokio::main]
 async fn main() -> Result<(), ServerError> {
     Server::create("0.0.0.0", 8181)
-        .post("/hello/json", hello_json)
-        .post("/hello/form", hello_form)
-        .post("/hello/form/urlencoded", hello_form_urlencoded)
-        .post("/hello/xml", hello_xml)
+        .service(
+            "/hello",
+            vec![
+                post("/json", hello_json),
+                post("/form", hello_form),
+                post("/form/urlencoded", hello_form_urlencoded),
+                post("/xml", hello_xml),
+            ]
+            .into(),
+        )
         .bind()
         .await
 }
