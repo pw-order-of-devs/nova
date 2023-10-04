@@ -11,5 +11,7 @@ pub mod callable;
 pub mod route;
 /// nova router
 pub mod router;
+/// nova routes wrapper
+pub mod routes;
 /// server routing
 pub mod server_routing;

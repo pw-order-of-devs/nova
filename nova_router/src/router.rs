@@ -7,11 +7,12 @@ use nova_core::types::request_type::RequestType;
 
 use crate::callable::{BoxedCallable, CloneableFn};
 use crate::route::Route;
+use crate::routes::Routes;
 
 /// Nova Router structure
 #[derive(Clone, Default)]
 pub struct Router {
-    routes: Vec<Route>,
+    routes: Routes,
     fallback: Option<BoxedCallable>,
 }
 
@@ -23,14 +24,6 @@ impl Router {
         path: &str,
         f: F,
     ) {
-        if self
-            .routes
-            .iter()
-            .any(|r| r.clone().get_type() == r#type && r.clone().get_path() == path)
-        {
-            return;
-        }
-
         let pattern = r"^/([a-zA-Z0-9_]+(/([a-zA-Z0-9_]+|\{[a-zA-Z0-9_]+\}))*/?)?$";
         if !Regex::new(pattern).unwrap().is_match(path) {
             return;
@@ -51,15 +44,11 @@ impl Router {
     /// find route for request
     pub fn match_route(
         &self,
-        route: (RequestType, String),
+        r#type: RequestType,
+        path: String,
         fallback: Option<BoxedCallable>,
     ) -> Option<(BoxedCallable, String)> {
-        if let Some(route) = self
-            .routes
-            .clone()
-            .into_iter()
-            .find(|r| r.matches(route.0, &route.1))
-        {
+        if let Some(route) = self.routes.find(r#type, &path) {
             Some((route.clone().get_callable().unwrap(), route.get_path()))
         } else {
             fallback.map(|f| (f, "".to_string()))

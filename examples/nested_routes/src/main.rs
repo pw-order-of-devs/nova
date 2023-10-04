@@ -17,8 +17,9 @@ async fn main() -> Result<(), ServerError> {
             "/test",
             vec![
                 get("/", hello_world),
-                service("/1", vec![get("/", hello_world)]),
-            ],
+                service("/1", vec![get("/", hello_world)].into()),
+            ]
+            .into(),
         )
         .bind()
         .await

@@ -1,9 +1,11 @@
 use std::fmt::{Debug, Formatter};
+use std::hash::{Hash, Hasher};
 
 use nova_core::response::ServerResponse;
 use nova_core::types::request_type::RequestType;
 
 use crate::callable::{BoxedCallable, CloneableFn};
+use crate::routes::Routes;
 
 /// Nova Route structure
 #[derive(Clone)]
@@ -11,13 +13,13 @@ pub struct Route {
     r#type: RequestType,
     path: String,
     f: Option<BoxedCallable>,
-    routes: Vec<Route>,
+    routes: Routes,
 }
 
 #[allow(clippy::self_named_constructors)]
 impl Route {
     /// create new service route
-    pub fn service(path: &str, routes: Vec<Route>) -> Self {
+    pub fn service(path: &str, routes: Routes) -> Self {
         Self {
             r#type: RequestType::Get,
             path: path.to_string(),
@@ -36,28 +38,28 @@ impl Route {
             r#type,
             path: path.to_string(),
             f: Some(Box::new(f)),
-            routes: vec![],
+            routes: Routes::default(),
         }
     }
 
     /// get request type
-    pub fn get_type(self) -> RequestType {
+    pub fn get_type(&self) -> RequestType {
         self.r#type
     }
 
     /// get path string
-    pub fn get_path(self) -> String {
-        self.path
+    pub fn get_path(&self) -> String {
+        self.clone().path
     }
 
     /// get callable
-    pub fn get_callable(self) -> Option<BoxedCallable> {
-        self.f
+    pub fn get_callable(&self) -> Option<BoxedCallable> {
+        self.clone().f
     }
 
     /// get routes
-    pub fn get_routes(self) -> Vec<Route> {
-        self.routes
+    pub fn get_routes(&self) -> Routes {
+        self.clone().routes
     }
 
     /// check if route matches predicate
@@ -90,8 +92,23 @@ impl Debug for Route {
     }
 }
 
+impl PartialEq<Self> for Route {
+    fn eq(&self, other: &Self) -> bool {
+        self.r#type == other.r#type && self.path == other.path
+    }
+}
+
+impl Eq for Route {}
+
+impl Hash for Route {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.r#type.hash(state);
+        self.path.hash(state);
+    }
+}
+
 /// Create service route
-pub fn service(path: &str, routes: Vec<Route>) -> Route {
+pub fn service(path: &str, routes: Routes) -> Route {
     Route::service(path, routes)
 }
 

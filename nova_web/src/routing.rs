@@ -1,9 +1,7 @@
 use nova_core::response::ServerResponse;
 use nova_core::types::request_type::RequestType;
-
 use nova_router::callable::CloneableFn;
-use nova_router::route::Route;
-
+use nova_router::routes::Routes;
 pub use {
     nova_router::route::{delete, get, patch, post, put, service},
     nova_router::server_routing::ServerRouting,
@@ -22,11 +20,11 @@ impl ServerRouting for Server {
         self.clone()
     }
 
-    fn service(&mut self, path: &str, routes: Vec<Route>) -> Self
+    fn service(&mut self, path: &str, routes: Routes) -> Self
     where
         Self: Sized,
     {
-        routes.into_iter().for_each(|item| {
+        routes.for_each(|item| {
             let path = &format!("{path}{}", item.clone().get_path());
             if item.clone().get_callable().is_some() {
                 self.route(item.clone().get_type(), path, item.get_callable().unwrap());

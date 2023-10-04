@@ -95,7 +95,8 @@ impl Server {
         router: Router,
         protocol: Protocol,
     ) -> std::io::Result<()> {
-        match &mut router.match_route(request.get_route_path(), router.clone().get_fallback()) {
+        let route_path = request.get_route_path();
+        match &mut router.match_route(route_path.0, route_path.1, router.clone().get_fallback()) {
             Some((callable, path)) => match callable(
                 request.update_path(path),
                 HttpResponse::default().protocol(protocol),

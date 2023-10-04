@@ -2,7 +2,7 @@ use nova_core::response::ServerResponse;
 use nova_core::types::request_type::RequestType;
 
 use crate::callable::CloneableFn;
-use crate::route::Route;
+use crate::routes::Routes;
 
 /// Routes registration for server
 pub trait ServerRouting
@@ -20,7 +20,7 @@ where
         Self: Sized;
 
     /// Register new service route
-    fn service(&mut self, path: &str, routes: Vec<Route>) -> Self
+    fn service(&mut self, path: &str, routes: Routes) -> Self
     where
         Self: Sized;
 
