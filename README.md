@@ -34,19 +34,7 @@ serde = { version = "1.0", features = ["derive"] }
 ```
 
 ```rust
-use nova_web::{
-    core::{
-        errors::ServerError,
-        types::{
-            request::HttpRequest,
-            response::{HttpResponse, ServerResponse},
-            status::HttpStatus,
-        },
-    },
-    routing::{post, ServerRouting},
-    serde::{Deserialize, SerdeRequest, Serialize},
-    server::Server,
-};
+use nova_web::prelude::*;
 
 #[derive(Debug, Deserialize, Serialize)]
 struct RequestBody {

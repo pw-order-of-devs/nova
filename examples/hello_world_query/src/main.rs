@@ -1,22 +1,15 @@
-use nova_web::core::errors::ServerError;
-use nova_web::core::types::request::HttpRequest;
-use nova_web::core::types::response::{HttpResponse, ServerResponse};
-use nova_web::core::types::status::HttpStatus;
-use nova_web::routing::ServerRouting;
-use nova_web::server::Server;
+use nova_web::prelude::*;
 
 fn hello_query(req: HttpRequest, res: HttpResponse) -> ServerResponse {
     let name = req.query("name")?;
-    Ok(res
-        .status(HttpStatus::OK)
-        .body(&format!("Hello, {}!", name)))
+    res.status(HttpStatus::OK)
+        .body(&format!("Hello, {}!", name))
 }
 
 fn hello_query_opt(req: HttpRequest, res: HttpResponse) -> ServerResponse {
     let name = req.query("name").unwrap_or("default".to_string());
-    Ok(res
-        .status(HttpStatus::OK)
-        .body(&format!("Hello, {}!", name)))
+    res.status(HttpStatus::OK)
+        .body(&format!("Hello, {}!", name))
 }
 
 #[tokio::main]

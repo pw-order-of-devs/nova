@@ -1,15 +1,9 @@
-use nova_web::core::errors::ServerError;
-use nova_web::core::types::request::HttpRequest;
-use nova_web::core::types::response::{HttpResponse, ServerResponse};
-use nova_web::core::types::status::HttpStatus;
-use nova_web::routing::ServerRouting;
-use nova_web::server::Server;
+use nova_web::prelude::*;
 
 fn hello_path(req: HttpRequest, res: HttpResponse) -> ServerResponse {
     let path = req.path("name")?;
-    Ok(res
-        .status(HttpStatus::OK)
-        .body(&format!("Hello, {}!", path)))
+    res.status(HttpStatus::OK)
+        .body(&format!("Hello, {}!", path))
 }
 
 #[tokio::main]

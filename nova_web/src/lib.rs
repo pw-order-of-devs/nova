@@ -18,15 +18,17 @@
 //! ```file_tree
 //! `nova_web`
 //! ├── core.rs
+//! ├── server.rs
 //! ├── routing.rs
 //! ├── request
-//! └── server.rs
+//! └── prelude.rs
 //! ```
 //!
 //! `core` - re-exports of `nova_core` items
 //! `routing` - integration of `nova_router` into server
 //! `serde` - re-exports of `nova_serde` items
 //! `server` - implementation of Nova server
+//! `prelude` - facade for `nova` imports
 
 /// Nova Server implementation
 pub mod server;
@@ -40,3 +42,6 @@ pub mod routing;
 /// Nova `serde` integration
 #[cfg(feature = "serde")]
 pub mod serde;
+
+/// Nova prelude
+pub mod prelude;
