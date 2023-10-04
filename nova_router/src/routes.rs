@@ -30,7 +30,7 @@ impl Routes {
         self.clone().inner.into_iter().for_each(f)
     }
 
-    fn to_string(&self) -> String {
+    fn inner_to_string(&self) -> String {
         let mut str = vec![];
         for item in self.clone().inner {
             str.push(format!("{} {}", item.get_type(), item.get_path()));
@@ -51,6 +51,6 @@ impl From<Vec<Route>> for Routes {
 
 impl Display for Routes {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.to_string())
+        write!(f, "{}", self.inner_to_string())
     }
 }
