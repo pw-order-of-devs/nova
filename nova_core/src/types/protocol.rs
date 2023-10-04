@@ -3,7 +3,7 @@ use std::str::FromStr;
 
 use crate::errors::ServerError;
 
-/// Nova Protocol
+/// Nova `Protocol`
 #[derive(Clone, Copy, Debug, Default)]
 pub enum Protocol {
     /// HTTP/1.1 protocol

@@ -1,12 +1,12 @@
-/// nova headers
+/// Nova headers
 pub mod headers;
-/// nova path
+/// Nova path
 pub mod path;
-/// nova protocol
+/// Nova protocol
 pub mod protocol;
-/// nova query
+/// Nova query
 pub mod query;
-/// nova request type
+/// Nova request type
 pub mod request_type;
-/// nova status
+/// Nova status
 pub mod status;

@@ -5,7 +5,7 @@ use crate::errors::ServerError;
 use crate::ext::hash_map_ext::HashMapExt;
 use crate::validators::has_error::ValidateHasError;
 
-/// Nova Headers
+/// Nova `Headers`
 #[derive(Clone, Debug, Default)]
 pub struct Headers {
     inner: HashMap<String, String>,

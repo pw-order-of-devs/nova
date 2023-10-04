@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 #![deny(clippy::all)]
 #![deny(clippy::cargo)]
 #![deny(clippy::complexity)]
@@ -13,15 +14,30 @@
 #![allow(clippy::self_named_constructors)]
 #![cfg_attr(test, deny(rust_2018_idioms))]
 
-//! nova router
+//! `nova_router` - routing implementation and integration
+//!
+//! ```file_tree
+//! `nova_router`
+//! ├── callable.rs
+//! ├── router.rs
+//! ├── route.rs
+//! ├── routes.rs
+//! └── server_routing.rs
+//! ```
+//!
+//! `callable` - definition of callable handler
+//! `router` - definition of Nova Router
+//! `route` - definition of Nova Route
+//! `routes` - wrapper of Nova Routes
+//! `server_routing` - trait for integration of routing
 
-/// nova callable
+/// Nova callable definition
 pub mod callable;
-/// nova route
+/// Nova route definition
 pub mod route;
-/// nova router
+/// Nova router definition
 pub mod router;
-/// nova routes wrapper
+/// Nova routes wrapper
 pub mod routes;
-/// server routing
+/// Server routing integration
 pub mod server_routing;

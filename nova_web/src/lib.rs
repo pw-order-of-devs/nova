@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 #![deny(clippy::all)]
 #![deny(clippy::cargo)]
 #![deny(clippy::complexity)]
@@ -12,17 +13,30 @@
 #![allow(clippy::module_name_repetitions)]
 #![cfg_attr(test, deny(rust_2018_idioms))]
 
-//! `nova_web` - web framework
+//! `nova_web` - implementation of web framework
+//!
+//! ```file_tree
+//! `nova_web`
+//! ├── core.rs
+//! ├── routing.rs
+//! ├── serde.rs
+//! └── server.rs
+//! ```
+//!
+//! `core` - re-exports of `nova_core` items
+//! `routing` - integration of `nova_router` into server
+//! `serde` - re-exports of `nova_serde` items
+//! `server` - implementation of Nova server
 
-/// nova server implementation
+/// Nova Server implementation
 pub mod server;
 
-/// nova core
+/// Nova core features
 pub mod core;
 
-/// nova routing
+/// Nova routing integration
 pub mod routing;
 
-/// nova serde integration
+/// Nova serde integration
 #[cfg(feature = "serde")]
 pub mod serde;

@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 
-/// Nova Http Status
+/// Nova `HTTPStatus`
 #[derive(Clone, Copy, Debug, Default)]
 pub enum HttpStatus {
     /// Http Status 100: Continue

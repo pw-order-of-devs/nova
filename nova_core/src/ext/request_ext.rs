@@ -5,10 +5,10 @@ use crate::types::request_type::RequestType;
 
 /// `HttpRequest` extension trait
 pub trait RequestExt {
-    /// extract route details
+    /// Extract route details
     fn get_route_path(&self) -> (RequestType, String);
 
-    /// update path map from route
+    /// Update path map from route
     #[must_use]
     fn update_path(self, route: &str) -> Self;
 }

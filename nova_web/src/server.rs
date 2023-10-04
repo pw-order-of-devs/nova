@@ -22,11 +22,6 @@ pub struct Server {
 /// Nova Server implementation
 impl Server {
     /// Create an instance of Nova Server
-    ///
-    /// # Arguments
-    /// * `host` - server address, like '0.0.0.0'
-    /// * `port` - port to listen on, like '8080'
-    ///
     #[must_use]
     pub fn create(host: &str, port: u16) -> Self {
         Self {
@@ -38,9 +33,6 @@ impl Server {
     }
 
     /// Set HTTP protocol used by Nova Server
-    ///
-    /// # Arguments
-    /// * `protocol` - HTTP protocol to use: {HTTP/1.1, HTTP/2}
     #[must_use]
     pub const fn protocol(mut self, protocol: Protocol) -> Self {
         self.protocol = protocol;

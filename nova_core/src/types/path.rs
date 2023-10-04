@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 
 use crate::ext::hash_map_ext::HashMapExt;
 
-/// Nova Path
+/// Nova `Path`
 #[derive(Clone, Debug, Default)]
 pub struct Path {
     inner: HashMap<String, String>,

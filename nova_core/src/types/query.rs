@@ -5,7 +5,7 @@ use crate::errors::ServerError;
 use crate::ext::hash_map_ext::HashMapExt;
 use crate::validators::has_error::ValidateHasError;
 
-/// Nova Query
+/// Nova `Query`
 #[derive(Clone, Debug, Default)]
 pub struct Query {
     inner: HashMap<String, String>,

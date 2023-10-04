@@ -30,10 +30,6 @@ impl HttpRequest {
 
     /// Get path entry by key
     ///
-    /// # Arguments
-    ///
-    /// * `key` - entry key to find
-    ///
     /// # Errors
     ///
     /// * `ServerError::BadRequest` - requested key is missing in path
@@ -49,10 +45,6 @@ impl HttpRequest {
     }
 
     /// Get query entry by key
-    ///
-    /// # Arguments
-    ///
-    /// * `key` - entry key to find
     ///
     /// # Errors
     ///
@@ -75,10 +67,6 @@ impl HttpRequest {
     }
 
     /// Get header by key
-    ///
-    /// # Arguments
-    ///
-    /// * `key` - entry key to find
     #[must_use]
     pub fn header(&self, key: &str) -> Option<String> {
         self.headers.get(key)

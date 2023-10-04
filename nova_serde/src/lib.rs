@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 #![deny(clippy::all)]
 #![deny(clippy::cargo)]
 #![deny(clippy::complexity)]
@@ -11,7 +12,15 @@
 #![deny(missing_debug_implementations)]
 #![allow(clippy::module_name_repetitions)]
 #![cfg_attr(test, deny(rust_2018_idioms))]
-//! nova serde integration
+
+//! `nova_serde` - serde integration
+//!
+//! ```file_tree
+//! `nova_serde`
+//! └── serde.rs
+//! ```
+//!
+//! `serde` - integration of serde for Nova
 
 /// serde integration
 pub mod serde;

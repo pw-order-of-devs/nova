@@ -3,7 +3,7 @@ use std::str::FromStr;
 
 use crate::errors::ServerError;
 
-/// http request type
+/// HTTP `RequestType`
 #[derive(Clone, Copy, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
 pub enum RequestType {
     /// HTTP::GET
