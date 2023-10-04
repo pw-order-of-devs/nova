@@ -1,6 +1,6 @@
 use crate::errors::ServerError;
 
-pub(crate) trait ValidateHasError
+pub trait ValidateHasError
 where
     Self: Sized,
 {
@@ -9,11 +9,9 @@ where
 
 impl<T: Clone> ValidateHasError for Vec<Result<T, ServerError>> {
     fn has_error(&self) -> Result<Self, ServerError> {
-        let has_error = self.iter().find(|a| a.is_err());
-        if let Some(error) = has_error {
-            Err(error.clone().err().unwrap())
-        } else {
-            Ok(self.clone())
-        }
+        self.iter().find(|a| a.is_err()).map_or_else(
+            || Ok(self.clone()),
+            |error| Err(error.clone().err().unwrap()),
+        )
     }
 }

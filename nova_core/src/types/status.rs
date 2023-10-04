@@ -137,82 +137,82 @@ pub enum HttpStatus {
 impl Display for HttpStatus {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            HttpStatus::Continue => write!(f, "100 Continue"),
-            HttpStatus::SwitchingProtocols => write!(f, "101 Switching Protocols"),
-            HttpStatus::Processing => write!(f, "102 Processing"),
-            HttpStatus::EarlyHints => write!(f, "103 Early Hints"),
-            HttpStatus::OK => write!(f, "200 Ok"),
-            HttpStatus::Created => write!(f, "201 Created"),
-            HttpStatus::Accepted => write!(f, "202 Accepted"),
-            HttpStatus::NonAuthoritativeInformation => {
+            Self::Continue => write!(f, "100 Continue"),
+            Self::SwitchingProtocols => write!(f, "101 Switching Protocols"),
+            Self::Processing => write!(f, "102 Processing"),
+            Self::EarlyHints => write!(f, "103 Early Hints"),
+            Self::OK => write!(f, "200 Ok"),
+            Self::Created => write!(f, "201 Created"),
+            Self::Accepted => write!(f, "202 Accepted"),
+            Self::NonAuthoritativeInformation => {
                 write!(f, "203 Non-Authoritative Information")
             }
-            HttpStatus::NoContent => write!(f, "204 No Content"),
-            HttpStatus::ResetContent => write!(f, "205 Reset Content"),
-            HttpStatus::PartialContent => write!(f, "206 Partial Content"),
-            HttpStatus::MultiStatus => write!(f, "207 Multi-Status"),
-            HttpStatus::MultipleChoices => write!(f, "300 Multiple Choices"),
-            HttpStatus::MovedPermanently => write!(f, "301 Moved Permanently"),
-            HttpStatus::Found => write!(f, "302 Found"),
-            HttpStatus::SeeOther => write!(f, "303 See Other"),
-            HttpStatus::NotModified => write!(f, "304 Not Modified"),
-            HttpStatus::UseProxy => write!(f, "305 Use Proxy"),
-            HttpStatus::Unused => write!(f, "306 Unused"),
-            HttpStatus::TemporaryRedirect => write!(f, "307 Temporary Redirect"),
-            HttpStatus::PermanentRedirect => write!(f, "308 Permanent Redirect"),
-            HttpStatus::BadRequest => write!(f, "400 Bad Request"),
-            HttpStatus::Unauthorized => write!(f, "401 Unauthorized"),
-            HttpStatus::PaymentRequired => write!(f, "402 Payment Required"),
-            HttpStatus::Forbidden => write!(f, "403 Forbidden"),
-            HttpStatus::NotFound => write!(f, "404 Not Found"),
-            HttpStatus::MethodNotAllowed => write!(f, "405 Method Not Allowed"),
-            HttpStatus::NotAcceptable => write!(f, "406 Not Acceptable"),
-            HttpStatus::ProxyAuthenticationRequired => {
+            Self::NoContent => write!(f, "204 No Content"),
+            Self::ResetContent => write!(f, "205 Reset Content"),
+            Self::PartialContent => write!(f, "206 Partial Content"),
+            Self::MultiStatus => write!(f, "207 Multi-Status"),
+            Self::MultipleChoices => write!(f, "300 Multiple Choices"),
+            Self::MovedPermanently => write!(f, "301 Moved Permanently"),
+            Self::Found => write!(f, "302 Found"),
+            Self::SeeOther => write!(f, "303 See Other"),
+            Self::NotModified => write!(f, "304 Not Modified"),
+            Self::UseProxy => write!(f, "305 Use Proxy"),
+            Self::Unused => write!(f, "306 Unused"),
+            Self::TemporaryRedirect => write!(f, "307 Temporary Redirect"),
+            Self::PermanentRedirect => write!(f, "308 Permanent Redirect"),
+            Self::BadRequest => write!(f, "400 Bad Request"),
+            Self::Unauthorized => write!(f, "401 Unauthorized"),
+            Self::PaymentRequired => write!(f, "402 Payment Required"),
+            Self::Forbidden => write!(f, "403 Forbidden"),
+            Self::NotFound => write!(f, "404 Not Found"),
+            Self::MethodNotAllowed => write!(f, "405 Method Not Allowed"),
+            Self::NotAcceptable => write!(f, "406 Not Acceptable"),
+            Self::ProxyAuthenticationRequired => {
                 write!(f, "407 Proxy Authentication Required")
             }
-            HttpStatus::RequestTimeout => write!(f, "408 Request Timeout"),
-            HttpStatus::Conflict => write!(f, "409 Conflict"),
-            HttpStatus::Gone => write!(f, "410 Gone"),
-            HttpStatus::LengthRequired => write!(f, "411 Length Required"),
-            HttpStatus::PreconditionFailed => write!(f, "412 Precondition Failed"),
-            HttpStatus::RequestEntityTooLarge => write!(f, "413 Request Entity Too Large"),
-            HttpStatus::RequestURITooLong => write!(f, "414 Request-URI Too Long"),
-            HttpStatus::UnsupportedMediaType => write!(f, "415 Unsupported Media Type"),
-            HttpStatus::RequestedRangeNotSatisfiable => {
+            Self::RequestTimeout => write!(f, "408 Request Timeout"),
+            Self::Conflict => write!(f, "409 Conflict"),
+            Self::Gone => write!(f, "410 Gone"),
+            Self::LengthRequired => write!(f, "411 Length Required"),
+            Self::PreconditionFailed => write!(f, "412 Precondition Failed"),
+            Self::RequestEntityTooLarge => write!(f, "413 Request Entity Too Large"),
+            Self::RequestURITooLong => write!(f, "414 Request-URI Too Long"),
+            Self::UnsupportedMediaType => write!(f, "415 Unsupported Media Type"),
+            Self::RequestedRangeNotSatisfiable => {
                 write!(f, "416 Requested Range Not Satisfiable")
             }
-            HttpStatus::ExpectationFailed => write!(f, "417 Expectation Failed"),
-            HttpStatus::ImATeapot => write!(f, "418 I'm a teapot"),
-            HttpStatus::EnhanceYourCalm => write!(f, "420 Enhance Your Calm"),
-            HttpStatus::MisdirectedRequest => write!(f, "421 Misdirected Request"),
-            HttpStatus::UnprocessableEntity => write!(f, "422 Unprocessable Entity"),
-            HttpStatus::Locked => write!(f, "423 Locked"),
-            HttpStatus::FailedDependency => write!(f, "424 Failed Dependency"),
-            HttpStatus::TooEarly => write!(f, "425 Too Early"),
-            HttpStatus::UpgradeRequired => write!(f, "426 Upgrade Required"),
-            HttpStatus::PreconditionRequired => write!(f, "428 Precondition Required"),
-            HttpStatus::TooManyRequests => write!(f, "429 Too Many Requests"),
-            HttpStatus::RequestHeaderFieldsTooLarge => {
+            Self::ExpectationFailed => write!(f, "417 Expectation Failed"),
+            Self::ImATeapot => write!(f, "418 I'm a teapot"),
+            Self::EnhanceYourCalm => write!(f, "420 Enhance Your Calm"),
+            Self::MisdirectedRequest => write!(f, "421 Misdirected Request"),
+            Self::UnprocessableEntity => write!(f, "422 Unprocessable Entity"),
+            Self::Locked => write!(f, "423 Locked"),
+            Self::FailedDependency => write!(f, "424 Failed Dependency"),
+            Self::TooEarly => write!(f, "425 Too Early"),
+            Self::UpgradeRequired => write!(f, "426 Upgrade Required"),
+            Self::PreconditionRequired => write!(f, "428 Precondition Required"),
+            Self::TooManyRequests => write!(f, "429 Too Many Requests"),
+            Self::RequestHeaderFieldsTooLarge => {
                 write!(f, "431 Request Header Fields Too Large")
             }
-            HttpStatus::NoResponse => write!(f, "444 No Response"),
-            HttpStatus::BlockedByWindowsParentalControls => {
+            Self::NoResponse => write!(f, "444 No Response"),
+            Self::BlockedByWindowsParentalControls => {
                 write!(f, "450 Blocked By Windows Parental Controls")
             }
-            HttpStatus::UnavailableForLegalReasons => {
+            Self::UnavailableForLegalReasons => {
                 write!(f, "451 Unavailable For Legal Reasons")
             }
-            HttpStatus::InternalServerError => write!(f, "500 Internal Server Error"),
-            HttpStatus::NotImplemented => write!(f, "501 Not Implemented"),
-            HttpStatus::BadGateway => write!(f, "502 Bad Gateway"),
-            HttpStatus::ServiceUnavailable => write!(f, "503 Service Unavailable"),
-            HttpStatus::GatewayTimeout => write!(f, "504 Gateway Timeout"),
-            HttpStatus::HTTPVersionNotSupported => write!(f, "505 HTTP Version Not Supported"),
-            HttpStatus::VariantAlsoNegotiates => write!(f, "506 Variant Also Negotiates"),
-            HttpStatus::InsufficientStorage => write!(f, "507 Insufficient Storage"),
-            HttpStatus::LoopDetected => write!(f, "508 Loop Detected"),
-            HttpStatus::NotExtended => write!(f, "510 Not Extended"),
-            HttpStatus::NetworkAuthenticationRequired => {
+            Self::InternalServerError => write!(f, "500 Internal Server Error"),
+            Self::NotImplemented => write!(f, "501 Not Implemented"),
+            Self::BadGateway => write!(f, "502 Bad Gateway"),
+            Self::ServiceUnavailable => write!(f, "503 Service Unavailable"),
+            Self::GatewayTimeout => write!(f, "504 Gateway Timeout"),
+            Self::HTTPVersionNotSupported => write!(f, "505 HTTP Version Not Supported"),
+            Self::VariantAlsoNegotiates => write!(f, "506 Variant Also Negotiates"),
+            Self::InsufficientStorage => write!(f, "507 Insufficient Storage"),
+            Self::LoopDetected => write!(f, "508 Loop Detected"),
+            Self::NotExtended => write!(f, "510 Not Extended"),
+            Self::NetworkAuthenticationRequired => {
                 write!(f, "511 Network Authentication Required")
             }
         }

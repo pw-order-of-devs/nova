@@ -1,7 +1,7 @@
 use nova_core::request::HttpRequest;
 use nova_core::response::{HttpResponse, ServerResponse};
 
-/// CallableType
+/// Definition of Callable type
 pub type BoxedCallable = Box<dyn CloneableFn<Output = ServerResponse> + 'static>;
 
 /// Base trait for route function

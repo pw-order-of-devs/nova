@@ -32,15 +32,15 @@ pub enum ServerError {
 impl Display for ServerError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            ServerError::BadRequest { message } => write!(f, "Bad Request: {message}"),
-            ServerError::EmptyRequest => write!(f, "Empty Request"),
-            ServerError::InternalError => write!(f, "Internal Error"),
-            ServerError::IoError { message } => write!(f, "IO Error: {message}"),
-            ServerError::NotFound => write!(f, "Not Found"),
-            ServerError::ParseRequestError { message } => {
+            Self::BadRequest { message } => write!(f, "Bad Request: {message}"),
+            Self::EmptyRequest => write!(f, "Empty Request"),
+            Self::InternalError => write!(f, "Internal Error"),
+            Self::IoError { message } => write!(f, "IO Error: {message}"),
+            Self::NotFound => write!(f, "Not Found"),
+            Self::ParseRequestError { message } => {
                 write!(f, "Parse Request Error: {message}")
             }
-            ServerError::UnsupportedRequestType => write!(f, "Unsupported Request Type"),
+            Self::UnsupportedRequestType => write!(f, "Unsupported Request Type"),
         }
     }
 }
@@ -49,7 +49,7 @@ impl std::error::Error for ServerError {}
 
 impl From<std::io::Error> for ServerError {
     fn from(value: std::io::Error) -> Self {
-        ServerError::IoError {
+        Self::IoError {
             message: value.to_string(),
         }
     }
@@ -57,7 +57,7 @@ impl From<std::io::Error> for ServerError {
 
 impl From<FromUtf8Error> for ServerError {
     fn from(value: FromUtf8Error) -> Self {
-        ServerError::ParseRequestError {
+        Self::ParseRequestError {
             message: value.to_string(),
         }
     }

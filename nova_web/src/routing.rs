@@ -25,11 +25,11 @@ impl ServerRouting for Server {
         Self: Sized,
     {
         routes.for_each(|item| {
-            let path = &format!("{path}{}", item.clone().get_path());
-            if item.clone().get_callable().is_some() {
-                self.route(item.clone().get_type(), path, item.get_callable().unwrap());
+            let path = &format!("{path}{}", item.get_path());
+            if item.get_callable().is_some() {
+                let _ = self.route(item.get_type(), path, item.get_callable().unwrap());
             } else {
-                self.service(path, item.get_routes());
+                let _ = self.service(path, item.get_routes());
             }
         });
         self.clone()

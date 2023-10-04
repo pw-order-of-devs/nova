@@ -28,13 +28,13 @@ impl FromStr for RequestType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "GET" => Ok(RequestType::Get),
-            "HEAD" => Ok(RequestType::Head),
-            "OPTIONS" => Ok(RequestType::Options),
-            "POST" => Ok(RequestType::Post),
-            "PUT" => Ok(RequestType::Put),
-            "PATCH" => Ok(RequestType::Patch),
-            "DELETE" => Ok(RequestType::Delete),
+            "GET" => Ok(Self::Get),
+            "HEAD" => Ok(Self::Head),
+            "OPTIONS" => Ok(Self::Options),
+            "POST" => Ok(Self::Post),
+            "PUT" => Ok(Self::Put),
+            "PATCH" => Ok(Self::Patch),
+            "DELETE" => Ok(Self::Delete),
             _ => Err(ServerError::UnsupportedRequestType),
         }
     }
@@ -46,13 +46,13 @@ impl Display for RequestType {
             f,
             "{}",
             match self {
-                RequestType::Get => "GET",
-                RequestType::Head => "HEAD",
-                RequestType::Options => "OPTIONS",
-                RequestType::Post => "POST",
-                RequestType::Put => "PUT",
-                RequestType::Patch => "PATCH",
-                RequestType::Delete => "DELETE",
+                Self::Get => "GET",
+                Self::Head => "HEAD",
+                Self::Options => "OPTIONS",
+                Self::Post => "POST",
+                Self::Put => "PUT",
+                Self::Patch => "PATCH",
+                Self::Delete => "DELETE",
             }
         )
     }

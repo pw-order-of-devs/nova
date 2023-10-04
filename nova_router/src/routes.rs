@@ -12,12 +12,13 @@ pub struct Routes {
 }
 
 impl Routes {
-    /// push into routes
+    /// Push into routes
     pub fn push(&mut self, route: Route) {
         self.inner.insert(route);
     }
 
-    /// find route by type and path
+    /// Find route by type and path
+    #[must_use]
     pub fn find(&self, r#type: RequestType, path: &str) -> Option<Route> {
         self.clone()
             .inner
@@ -25,12 +26,12 @@ impl Routes {
             .find(|r| r.matches(r#type, path))
     }
 
-    /// iterate over routes
+    /// Iterate over routes
     pub fn for_each<F: FnMut(Route)>(&self, f: F) {
-        self.clone().inner.into_iter().for_each(f)
+        self.clone().inner.into_iter().for_each(f);
     }
 
-    fn inner_to_string(&self) -> String {
+    fn print(&self) -> String {
         let mut str = vec![];
         for item in self.clone().inner {
             str.push(format!("{} {}", item.get_type(), item.get_path()));
@@ -45,12 +46,12 @@ impl From<Vec<Route>> for Routes {
         for v in value {
             inner.insert(v);
         }
-        Routes { inner }
+        Self { inner }
     }
 }
 
 impl Display for Routes {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.inner_to_string())
+        write!(f, "{}", self.print())
     }
 }

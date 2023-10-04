@@ -22,37 +22,64 @@ pub struct HttpRequest {
 }
 
 impl HttpRequest {
-    /// extract body_string
+    /// Extract body string from request
+    #[must_use]
     pub fn body_string(&self) -> String {
         self.body.clone()
     }
 
-    /// get path by key
+    /// Get path entry by key
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - entry key to find
+    ///
+    /// # Errors
+    ///
+    /// * `ServerError::BadRequest` - requested key is missing in path
     pub fn path(&self, key: &str) -> Result<String, ServerError> {
-        match self.path.get_inner().get(key) {
-            Some(item) => Ok(item.clone()),
-            None => Err(ServerError::BadRequest {
-                message: format!("path item \"{key}\" is missing"),
-            }),
-        }
+        self.path.get_inner().get(key).map_or_else(
+            || {
+                Err(ServerError::BadRequest {
+                    message: format!("path item \"{key}\" is missing"),
+                })
+            },
+            |item| Ok(item.clone()),
+        )
     }
 
-    /// get query by key
+    /// Get query entry by key
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - entry key to find
+    ///
+    /// # Errors
+    ///
+    /// * `ServerError::BadRequest` - requested key is missing in query
     pub fn query(&self, key: &str) -> Result<String, ServerError> {
-        match self.query.get_inner().get(key) {
-            Some(item) => Ok(item.clone()),
-            None => Err(ServerError::BadRequest {
-                message: format!("query item \"{key}\" is missing"),
-            }),
-        }
+        self.query.get_inner().get(key).map_or_else(
+            || {
+                Err(ServerError::BadRequest {
+                    message: format!("query item \"{key}\" is missing"),
+                })
+            },
+            |item| Ok(item.clone()),
+        )
     }
 
-    /// get headers map
+    /// Get headers map
+    #[must_use]
     pub fn headers(&self) -> Headers {
         self.clone().headers
     }
 
-    /// get header by key
+    /// Get header by key
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - entry key to find
+    #[must_use]
     pub fn header(&self, key: &str) -> Option<String> {
         self.headers.get(key)
     }
@@ -74,6 +101,7 @@ impl FromStr for HttpRequest {
         let target = request[1].to_string();
         let protocol = Protocol::from_str(request[2])?;
 
+        let path = Path::default();
         let query_pos = target.chars().position(|i| i == '?');
         let (target, query) = if let Some(pos) = query_pos {
             (
@@ -90,21 +118,20 @@ impl FromStr for HttpRequest {
             .unwrap_or(parts.len() - 1);
         let headers = Headers::from_str(&parts[1..headers_pos].to_vec().join("\r\n"))?;
         let body = parts[headers_pos + 1..parts.len()]
-            .to_vec()
             .iter()
-            .map(|s| s.to_string())
+            .map(ToString::to_string)
             .collect::<Vec<String>>()
             .join("\r\n")
             .chars()
             .filter(|&i| i != '\0')
             .collect();
 
-        Ok(HttpRequest {
+        Ok(Self {
             r#type,
             target,
             protocol,
             query,
-            path: Default::default(),
+            path,
             body,
             headers,
         })
@@ -126,10 +153,10 @@ impl Display for HttpRequest {
             errors.push(write!(f, "\r\nBody: \r\n{}", self.body));
         }
 
-        if !errors.is_empty() {
-            errors[0]
-        } else {
+        if errors.is_empty() {
             Ok(())
+        } else {
+            errors[0]
         }
     }
 }

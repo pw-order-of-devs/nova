@@ -27,8 +27,9 @@ impl Server {
     /// * `host` - server address, like '0.0.0.0'
     /// * `port` - port to listen on, like '8080'
     ///
+    #[must_use]
     pub fn create(host: &str, port: u16) -> Self {
-        Server {
+        Self {
             host: host.to_string(),
             port,
             router: Router::default(),
@@ -40,12 +41,17 @@ impl Server {
     ///
     /// # Arguments
     /// * `protocol` - HTTP protocol to use: {HTTP/1.1, HTTP/2}
-    pub fn protocol(mut self, protocol: Protocol) -> Self {
+    #[must_use]
+    pub const fn protocol(mut self, protocol: Protocol) -> Self {
         self.protocol = protocol;
         self
     }
 
     /// Start Nova Server
+    ///
+    /// # Errors
+    ///
+    /// Returns a `ServerError` in case of a failure while starting the server
     pub async fn bind(self) -> Result<(), ServerError> {
         let listener = TcpListener::bind(&format!("{}:{}", self.host, self.port)).await?;
         loop {
@@ -96,7 +102,7 @@ impl Server {
         protocol: Protocol,
     ) -> std::io::Result<()> {
         let route_path = request.get_route_path();
-        match &mut router.match_route(route_path.0, route_path.1, router.clone().get_fallback()) {
+        match &mut router.match_route(route_path.0, &route_path.1, router.clone().get_fallback()) {
             Some((callable, path)) => match callable(
                 request.update_path(path),
                 HttpResponse::default().protocol(protocol),
@@ -114,7 +120,7 @@ impl Server {
 
     async fn handle_error(stream: &mut TcpStream, error: ServerError) -> std::io::Result<()> {
         let response =
-            HttpResponse::from_error(error, Protocol::default()).append_default_headers();
+            HttpResponse::from_error(&error, Protocol::default()).append_default_headers();
         stream.write_all(format!("{response}").as_bytes()).await
     }
 }

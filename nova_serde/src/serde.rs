@@ -1,6 +1,6 @@
 pub use serde::{Deserialize, Serialize};
 
-/// Define the SerdeRequest trait
+/// Define the `SerdeRequest` trait
 pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
     /// Parsing Error type
     type Err;
@@ -8,10 +8,14 @@ pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
     /// extract body for parsing
     fn get_serde_body(&self) -> String;
 
-    /// parse hello_serde error
+    /// parse serde error
     fn parse_error(_: impl std::error::Error) -> Self::Err;
 
-    /// parse json body to struct
+    /// Parse json body to struct
+    ///
+    /// # Errors
+    ///
+    /// * `ServerError::ParseRequestError` - error while parsing the request body
     fn json(&self) -> Result<S, Self::Err> {
         match serde_json::from_str(&self.get_serde_body()) {
             Ok(body) => Ok(body),
@@ -19,7 +23,11 @@ pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
         }
     }
 
-    /// parse form body to struct
+    /// Parse form body to struct
+    ///
+    /// # Errors
+    ///
+    /// * `ServerError::ParseRequestError` - error while parsing the request body
     fn form(&self) -> Result<S, Self::Err> {
         let body = self.get_serde_body();
         let lines = body
@@ -31,16 +39,17 @@ pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
         for line in lines {
             if line.starts_with("--") {
                 continue;
-            } else if line.to_lowercase().starts_with("content-disposition") {
+            }
+            if line.to_lowercase().starts_with("content-disposition") {
                 if !fields.is_empty() {
-                    fields.push("&".to_string())
+                    fields.push("&".to_string());
                 }
                 let mut name = line.to_string();
                 name = name.replace("Content-Disposition: form-data; name=", "");
                 name = name.replace('\"', "");
                 fields.push(name);
             } else {
-                fields.push(format!("={line}"))
+                fields.push(format!("={line}"));
             }
         }
 
@@ -50,7 +59,11 @@ pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
         }
     }
 
-    /// parse x-www-form-urlencoded body to struct
+    /// Parse x-www-form-urlencoded body to struct
+    ///
+    /// # Errors
+    ///
+    /// * `ServerError::ParseRequestError` - error while parsing the request body
     fn form_urlencoded(&self) -> Result<S, Self::Err> {
         match serde_urlencoded::from_str(&self.get_serde_body()) {
             Ok(body) => Ok(body),
@@ -58,7 +71,11 @@ pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
         }
     }
 
-    /// parse xml body to struct
+    /// Parse xml body to struct
+    ///
+    /// # Errors
+    ///
+    /// * `ServerError::ParseRequestError` - error while parsing the request body
     fn xml(&self) -> Result<S, Self::Err> {
         match serde_xml_rs::from_str(&self.get_serde_body()) {
             Ok(body) => Ok(body),

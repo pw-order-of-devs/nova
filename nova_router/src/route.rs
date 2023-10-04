@@ -16,9 +16,9 @@ pub struct Route {
     routes: Routes,
 }
 
-#[allow(clippy::self_named_constructors)]
 impl Route {
     /// create new service route
+    #[must_use]
     pub fn service(path: &str, routes: Routes) -> Self {
         Self {
             r#type: RequestType::Get,
@@ -42,27 +42,32 @@ impl Route {
         }
     }
 
-    /// get request type
-    pub fn get_type(&self) -> RequestType {
+    /// Get request type
+    #[must_use]
+    pub const fn get_type(&self) -> RequestType {
         self.r#type
     }
 
-    /// get path string
+    /// Get path string
+    #[must_use]
     pub fn get_path(&self) -> String {
         self.clone().path
     }
 
-    /// get callable
+    /// Get callable
+    #[must_use]
     pub fn get_callable(&self) -> Option<BoxedCallable> {
         self.clone().f
     }
 
-    /// get routes
+    /// Get routes
+    #[must_use]
     pub fn get_routes(&self) -> Routes {
         self.clone().routes
     }
 
-    /// check if route matches predicate
+    /// Check if route matches predicate
+    #[must_use]
     pub fn matches(&self, r#type: RequestType, path: &str) -> bool {
         if self.r#type != r#type {
             return false;
@@ -108,6 +113,7 @@ impl Hash for Route {
 }
 
 /// Create service route
+#[must_use]
 pub fn service(path: &str, routes: Routes) -> Route {
     Route::service(path, routes)
 }

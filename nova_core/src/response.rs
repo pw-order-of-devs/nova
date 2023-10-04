@@ -19,9 +19,10 @@ pub struct HttpResponse {
 }
 
 impl HttpResponse {
-    /// Create new HttpResponse
+    /// Create new `HttpResponse`
+    #[must_use]
     pub fn new(status: HttpStatus, body: &str, headers: Headers, protocol: Protocol) -> Self {
-        HttpResponse {
+        Self {
             protocol,
             status,
             body: body.to_string(),
@@ -29,15 +30,17 @@ impl HttpResponse {
         }
     }
 
-    /// Build Nova Response from NovaError
-    pub fn from_error(e: ServerError, protocol: Protocol) -> Self {
+    /// Build Nova Response from `NovaError`
+    #[must_use]
+    pub fn from_error(e: &ServerError, protocol: Protocol) -> Self {
         let (status, body) = match e {
-            ServerError::BadRequest { .. } => (HttpStatus::BadRequest, "Bad request"),
+            ServerError::BadRequest { .. } | ServerError::ParseRequestError { .. } => {
+                (HttpStatus::BadRequest, "Bad request")
+            }
             ServerError::EmptyRequest => (HttpStatus::BadRequest, "Empty request"),
             ServerError::InternalError => (HttpStatus::InternalServerError, "Internal error"),
             ServerError::IoError { .. } => (HttpStatus::InternalServerError, "IO error"),
             ServerError::NotFound { .. } => (HttpStatus::NotFound, "Not Found"),
-            ServerError::ParseRequestError { .. } => (HttpStatus::BadRequest, "Bad request"),
             ServerError::UnsupportedRequestType => {
                 (HttpStatus::MethodNotAllowed, "Unsupported request type")
             }
@@ -45,7 +48,7 @@ impl HttpResponse {
         let mut headers = Headers::default();
         headers.insert("Content-length", &body.len().to_string());
 
-        HttpResponse {
+        Self {
             protocol,
             status,
             body: body.to_string(),
@@ -53,37 +56,43 @@ impl HttpResponse {
         }
     }
 
-    /// set response protocol
-    pub fn protocol(mut self, value: Protocol) -> Self {
+    /// Set response protocol
+    #[must_use]
+    pub const fn protocol(mut self, value: Protocol) -> Self {
         self.protocol = value;
         self
     }
 
-    /// set response status
-    pub fn status(mut self, value: HttpStatus) -> Self {
+    /// Set response status
+    #[must_use]
+    pub const fn status(mut self, value: HttpStatus) -> Self {
         self.status = value;
         self
     }
 
-    /// set response body
+    /// Set response body
+    #[must_use]
     pub fn body(mut self, value: &str) -> Self {
         self.body = value.to_string();
         self
     }
 
-    /// set response headers
+    /// Set response headers
+    #[must_use]
     pub fn headers(mut self, value: Headers) -> Self {
         self.headers = value;
         self
     }
 
-    /// append response headers
+    /// Append response headers
+    #[must_use]
     pub fn header(mut self, k: &str, v: &str) -> Self {
         self.headers.insert(k, v);
         self
     }
 
-    /// append default headers if not present
+    /// Append default headers if not present
+    #[must_use]
     pub fn append_default_headers(mut self) -> Self {
         self.headers
             .insert_if_not_exists("Content-Length", &self.body.len().to_string());
@@ -106,10 +115,10 @@ impl Display for HttpResponse {
             errors.push(write!(f, "\r\n\r\n{}", self.body));
         }
 
-        if !errors.is_empty() {
-            errors[0]
-        } else {
+        if errors.is_empty() {
             Ok(())
+        } else {
+            errors[0]
         }
     }
 }

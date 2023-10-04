@@ -2,8 +2,8 @@ use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
 use crate::errors::ServerError;
-use crate::ext::has_error::ValidateHasError;
 use crate::ext::hash_map_ext::HashMapExt;
+use crate::validators::has_error::ValidateHasError;
 
 /// Nova Headers
 #[derive(Clone, Debug, Default)]
@@ -47,7 +47,7 @@ impl HashMapExt for Headers {
             .collect::<Vec<_>>()
             .has_error()?
             .into_iter()
-            .map(|item| item.unwrap())
+            .map(Result::unwrap)
             .collect();
         Ok(Self::new(inner))
     }
