@@ -20,6 +20,7 @@ serde = ["dep:nova_serde"]
 
 [dependencies]
 nova_core = { path = "../nova_core" }
+nova_middleware = { path = "../nova_middleware" }
 nova_router = { path = "../nova_router" }
 nova_serde = { path = "../nova_serde", optional = true }
 tokio = { version = "1.32", features = ["full"] }

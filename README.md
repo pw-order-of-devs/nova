@@ -17,10 +17,10 @@ Examples of how to use the crate can be found in [examples][examples].
 - serde integration for parsing request body
 - [todo] Handlers registered by macros
 - [todo] OpenApi support
-- [todo] Middleware - custom
-- [todo] Dependency Injection - custom
+- custom Middleware integration
+- [todo] custom Dependency Injection integration
 
-Custom middleware include pre-implemented commonly used middlewares like [middleware..].\
+[todo] Custom middleware include pre-implemented commonly used middlewares like [middleware..].\
 Custom Dependency Injection provides a flexibility to control the dependencies like database connection or other external integrations.
 
 ### Usage example

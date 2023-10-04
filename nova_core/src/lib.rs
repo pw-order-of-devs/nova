@@ -21,6 +21,7 @@
 //! ├── request.rs
 //! ├── response.rs
 //! └── types - mod.rs
+//!     ├── auth.rs
 //!     ├── headers.rs
 //!     ├── path.rs
 //!     ├── protocol.rs

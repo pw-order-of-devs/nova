@@ -71,6 +71,11 @@ impl HttpRequest {
     pub fn header(&self, key: &str) -> Option<String> {
         self.headers.get(key)
     }
+
+    /// Put header
+    pub fn put_header(&mut self, key: &str, value: &str) {
+        self.headers.insert(key, value);
+    }
 }
 
 impl FromStr for HttpRequest {

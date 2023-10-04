@@ -41,6 +41,7 @@ impl HttpResponse {
             ServerError::InternalError => (HttpStatus::InternalServerError, "Internal error"),
             ServerError::IoError { .. } => (HttpStatus::InternalServerError, "IO error"),
             ServerError::NotFound { .. } => (HttpStatus::NotFound, "Not Found"),
+            ServerError::Unauthorized => (HttpStatus::Unauthorized, "Unauthorized"),
             ServerError::UnsupportedRequestType => {
                 (HttpStatus::MethodNotAllowed, "Unsupported request type")
             }

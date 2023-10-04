@@ -8,6 +8,7 @@ use nova_core::ext::request_ext::RequestExt;
 use nova_core::request::HttpRequest;
 use nova_core::response::{HttpResponse, HttpResponseData};
 use nova_core::types::protocol::Protocol;
+use nova_middleware::middlewares::Middlewares;
 use nova_router::router::Router;
 
 /// Nova server structure
@@ -15,6 +16,7 @@ use nova_router::router::Router;
 pub struct Server {
     host: String,
     port: u16,
+    pub(crate) middleware: Middlewares,
     pub(crate) router: Router,
     protocol: Protocol,
 }
@@ -27,6 +29,7 @@ impl Server {
         Self {
             host: host.to_string(),
             port,
+            middleware: Middlewares::default(),
             router: Router::default(),
             protocol: Protocol::default(),
         }
@@ -49,14 +52,27 @@ impl Server {
         loop {
             let (mut stream, _) = listener.accept().await?;
             let router = self.router.clone();
+            let middlewares = self.middleware.clone();
             tokio::spawn(async move {
                 match Self::handle_request(&mut stream).await {
-                    Ok(request) => {
-                        let _ = Self::handle_response(&mut stream, request, router, self.protocol)
-                            .await;
+                    Ok(mut request) => {
+                        match middlewares.call_for_req(&mut request) {
+                            Ok(_) => {}
+                            Err(err) => {
+                                let _ = Self::handle_error(&mut stream, err).await;
+                            }
+                        };
+                        let _ = Self::handle_response(
+                            &mut stream,
+                            request,
+                            middlewares,
+                            router,
+                            self.protocol,
+                        )
+                        .await;
                     }
-                    Err(e) => {
-                        let _ = Self::handle_error(&mut stream, e).await;
+                    Err(err) => {
+                        let _ = Self::handle_error(&mut stream, err).await;
                     }
                 }
             });
@@ -90,6 +106,7 @@ impl Server {
     async fn handle_response(
         stream: &mut TcpStream,
         request: HttpRequest,
+        middlewares: Middlewares,
         router: Router,
         protocol: Protocol,
     ) -> std::io::Result<()> {
@@ -99,11 +116,14 @@ impl Server {
                 request.update_path(path),
                 HttpResponse::default().protocol(protocol).unwrap(),
             ) {
-                Ok(response) => {
-                    stream
-                        .write_all(format!("{}", response.append_default_headers()).as_bytes())
-                        .await
-                }
+                Ok(mut response) => match middlewares.call_for_res(&mut response) {
+                    Ok(_) => {
+                        stream
+                            .write_all(format!("{}", response.append_default_headers()).as_bytes())
+                            .await
+                    }
+                    Err(err) => Self::handle_error(stream, err).await,
+                },
                 Err(e) => Self::handle_error(stream, e).await,
             },
             None => Self::handle_error(stream, ServerError::NotFound).await,

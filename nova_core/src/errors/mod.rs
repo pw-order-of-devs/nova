@@ -25,6 +25,8 @@ pub enum ServerError {
         /// error message
         message: String,
     },
+    /// Unauthorized
+    Unauthorized,
     /// UnsupportedRequestType
     UnsupportedRequestType,
 }
@@ -40,6 +42,7 @@ impl Display for ServerError {
             Self::ParseError { message } => {
                 write!(f, "Parse Request Error: {message}")
             }
+            Self::Unauthorized => write!(f, "Unauthorized"),
             Self::UnsupportedRequestType => write!(f, "Unsupported Request Type"),
         }
     }

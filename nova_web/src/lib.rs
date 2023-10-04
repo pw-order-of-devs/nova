@@ -18,13 +18,15 @@
 //! ```file_tree
 //! `nova_web`
 //! ├── core.rs
-//! ├── server.rs
+//! ├── middleware.rs
 //! ├── routing.rs
-//! ├── request
+//! ├── serde.rs
+//! ├── server.rs
 //! └── prelude.rs
 //! ```
 //!
 //! `core` - re-exports of `nova_core` items
+//! `middleware` - integration of `nova_middleware` into server
 //! `routing` - integration of `nova_router` into server
 //! `serde` - re-exports of `nova_serde` items
 //! `server` - implementation of Nova server
@@ -35,6 +37,9 @@ pub mod server;
 
 /// Nova core features
 pub mod core;
+
+/// Nova middleware integration
+pub mod middleware;
 
 /// Nova routing integration
 pub mod routing;

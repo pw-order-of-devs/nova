@@ -2,9 +2,11 @@ pub use crate::{
     core::{
         errors::*,
         types::{
-            headers::*, path::*, protocol::*, request::*, request_type::*, response::*, status::*,
+            auth::*, headers::*, path::*, protocol::*, request::*, request_type::*, response::*,
+            status::*,
         },
     },
+    middleware::*,
     routing::*,
     server::*,
 };

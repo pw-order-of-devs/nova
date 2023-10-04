@@ -1,3 +1,5 @@
+/// Nova auth
+pub mod auth;
 /// Nova headers
 pub mod headers;
 /// Nova path
