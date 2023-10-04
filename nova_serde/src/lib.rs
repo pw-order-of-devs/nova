@@ -13,14 +13,20 @@
 #![allow(clippy::module_name_repetitions)]
 #![cfg_attr(test, deny(rust_2018_idioms))]
 
-//! `nova_serde` - serde integration
+//! `nova_serde` - `serde` integration
 //!
 //! ```file_tree
 //! `nova_serde`
-//! └── serde.rs
+//! ├── request
+//! └── response
 //! ```
 //!
-//! `serde` - integration of serde for Nova
+//! `request` - integration of `serde` for Nova Request body
+//! `response` - integration of `serde` for Nova Response body
 
-/// serde integration
-pub mod serde;
+/// `serde` integration for request
+pub mod request;
+/// `serde` integration for response
+pub mod response;
+
+pub use serde::{Deserialize, Serialize};

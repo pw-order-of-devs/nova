@@ -80,7 +80,7 @@ impl FromStr for HttpRequest {
         let parts = s.split("\r\n").collect::<Vec<&str>>();
         let request = parts[0].split(' ').collect::<Vec<&str>>();
         if request.len() < 3 {
-            return Err(ServerError::ParseRequestError {
+            return Err(ServerError::ParseError {
                 message: "request is malformed".to_string(),
             });
         }

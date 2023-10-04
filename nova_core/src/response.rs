@@ -34,7 +34,7 @@ impl HttpResponse {
     #[must_use]
     pub fn from_error(e: &ServerError, protocol: Protocol) -> Self {
         let (status, body) = match e {
-            ServerError::BadRequest { .. } | ServerError::ParseRequestError { .. } => {
+            ServerError::BadRequest { .. } | ServerError::ParseError { .. } => {
                 (HttpStatus::BadRequest, "Bad request")
             }
             ServerError::EmptyRequest => (HttpStatus::BadRequest, "Empty request"),
@@ -56,41 +56,6 @@ impl HttpResponse {
         }
     }
 
-    /// Set response protocol
-    #[must_use]
-    pub const fn protocol(mut self, value: Protocol) -> Self {
-        self.protocol = value;
-        self
-    }
-
-    /// Set response status
-    #[must_use]
-    pub const fn status(mut self, value: HttpStatus) -> Self {
-        self.status = value;
-        self
-    }
-
-    /// Set response body
-    #[must_use]
-    pub fn body(mut self, value: &str) -> Self {
-        self.body = value.to_string();
-        self
-    }
-
-    /// Set response headers
-    #[must_use]
-    pub fn headers(mut self, value: Headers) -> Self {
-        self.headers = value;
-        self
-    }
-
-    /// Append response headers
-    #[must_use]
-    pub fn header(mut self, k: &str, v: &str) -> Self {
-        self.headers.insert(k, v);
-        self
-    }
-
     /// Append default headers if not present
     #[must_use]
     pub fn append_default_headers(mut self) -> Self {
@@ -101,6 +66,93 @@ impl HttpResponse {
         self.headers
             .insert_if_not_exists("Date", &chrono::Utc::now().to_rfc2822());
         self.clone()
+    }
+}
+
+/// Basic Operations for `HttpResponse`
+pub trait HttpResponseData {
+    /// Set response protocol
+    ///
+    /// # Errors
+    ///
+    /// * wrapper for expected return type
+    fn protocol(self, value: Protocol) -> ServerResponse;
+
+    /// Set response status
+    ///
+    /// # Errors
+    ///
+    /// * wrapper for expected return type
+    fn status(self, value: HttpStatus) -> ServerResponse;
+
+    /// Set response body
+    ///
+    /// # Errors
+    ///
+    /// * wrapper for expected return type
+    fn body(self, value: &str) -> ServerResponse;
+
+    /// Set response headers
+    ///
+    /// # Errors
+    ///
+    /// * wrapper for expected return type
+    fn headers(self, value: Headers) -> ServerResponse;
+
+    /// Append response headers
+    ///
+    /// # Errors
+    ///
+    /// * wrapper for expected return type
+    fn header(self, k: &str, v: &str) -> ServerResponse;
+}
+
+impl HttpResponseData for HttpResponse {
+    fn protocol(mut self, value: Protocol) -> ServerResponse {
+        self.protocol = value;
+        Ok(self)
+    }
+
+    fn status(mut self, value: HttpStatus) -> ServerResponse {
+        self.status = value;
+        Ok(self)
+    }
+
+    fn body(mut self, value: &str) -> ServerResponse {
+        self.body = value.to_string();
+        Ok(self)
+    }
+
+    fn headers(mut self, value: Headers) -> ServerResponse {
+        self.headers = value;
+        Ok(self)
+    }
+
+    fn header(mut self, k: &str, v: &str) -> ServerResponse {
+        self.headers.insert(k, v);
+        Ok(self)
+    }
+}
+
+impl HttpResponseData for ServerResponse {
+    fn protocol(self, value: Protocol) -> ServerResponse {
+        self?.protocol(value)
+    }
+
+    fn status(self, value: HttpStatus) -> ServerResponse {
+        self?.status(value)
+    }
+
+    fn body(self, value: &str) -> ServerResponse {
+        self?.body(value)
+    }
+
+    fn headers(self, value: Headers) -> ServerResponse {
+        self?.headers(value)
+    }
+
+    fn header(self, k: &str, v: &str) -> ServerResponse {
+        self?.header(k, v)
     }
 }
 

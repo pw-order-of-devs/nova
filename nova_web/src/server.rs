@@ -6,7 +6,7 @@ use tokio::net::{TcpListener, TcpStream};
 use nova_core::errors::ServerError;
 use nova_core::ext::request_ext::RequestExt;
 use nova_core::request::HttpRequest;
-use nova_core::response::HttpResponse;
+use nova_core::response::{HttpResponse, HttpResponseData};
 use nova_core::types::protocol::Protocol;
 use nova_router::router::Router;
 
@@ -77,7 +77,7 @@ impl Server {
                     }
                 }
                 Err(e) => {
-                    return Err(ServerError::ParseRequestError {
+                    return Err(ServerError::ParseError {
                         message: e.to_string(),
                     })
                 }
@@ -97,7 +97,7 @@ impl Server {
         match &mut router.match_route(route_path.0, &route_path.1, router.clone().get_fallback()) {
             Some((callable, path)) => match callable(
                 request.update_path(path),
-                HttpResponse::default().protocol(protocol),
+                HttpResponse::default().protocol(protocol).unwrap(),
             ) {
                 Ok(response) => {
                     stream

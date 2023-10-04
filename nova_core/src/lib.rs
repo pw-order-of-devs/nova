@@ -20,7 +20,6 @@
 //! ├── errors - mod.rs
 //! ├── request.rs
 //! ├── response.rs
-//! ├── serde.rs
 //! └── types - mod.rs
 //!     ├── headers.rs
 //!     ├── path.rs
@@ -49,7 +48,7 @@ pub mod response;
 /// Nova Types definitions
 pub mod types;
 
-/// Nova serde integration
+/// Nova `serde` integration
 pub mod serde;
 
 /// extensions

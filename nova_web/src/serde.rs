@@ -1,1 +1,3 @@
-pub use nova_serde::serde::{Deserialize, SerdeRequest, Serialize};
+pub use nova_serde::request::SerdeRequest;
+pub use nova_serde::response::SerdeResponse;
+pub use nova_serde::{Deserialize, Serialize};

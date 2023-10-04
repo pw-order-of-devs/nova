@@ -19,7 +19,7 @@
 //! `nova_web`
 //! ├── core.rs
 //! ├── routing.rs
-//! ├── serde.rs
+//! ├── request
 //! └── server.rs
 //! ```
 //!
@@ -37,6 +37,6 @@ pub mod core;
 /// Nova routing integration
 pub mod routing;
 
-/// Nova serde integration
+/// Nova `serde` integration
 #[cfg(feature = "serde")]
 pub mod serde;

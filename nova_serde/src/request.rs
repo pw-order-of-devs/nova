@@ -1,4 +1,4 @@
-pub use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 /// Define the `SerdeRequest` trait
 pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
@@ -15,7 +15,7 @@ pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
     ///
     /// # Errors
     ///
-    /// * `ServerError::ParseRequestError` - error while parsing the request body
+    /// * `ServerError::ParseError` - error while parsing the request body
     fn json(&self) -> Result<S, Self::Err> {
         match serde_json::from_str(&self.get_serde_body()) {
             Ok(body) => Ok(body),
@@ -27,7 +27,7 @@ pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
     ///
     /// # Errors
     ///
-    /// * `ServerError::ParseRequestError` - error while parsing the request body
+    /// * `ServerError::ParseError` - error while parsing the request body
     fn form(&self) -> Result<S, Self::Err> {
         let body = self.get_serde_body();
         let lines = body
@@ -63,7 +63,7 @@ pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
     ///
     /// # Errors
     ///
-    /// * `ServerError::ParseRequestError` - error while parsing the request body
+    /// * `ServerError::ParseError` - error while parsing the request body
     fn form_urlencoded(&self) -> Result<S, Self::Err> {
         match serde_urlencoded::from_str(&self.get_serde_body()) {
             Ok(body) => Ok(body),
@@ -75,7 +75,7 @@ pub trait SerdeRequest<S: for<'a> Deserialize<'a>> {
     ///
     /// # Errors
     ///
-    /// * `ServerError::ParseRequestError` - error while parsing the request body
+    /// * `ServerError::ParseError` - error while parsing the request body
     fn xml(&self) -> Result<S, Self::Err> {
         match serde_xml_rs::from_str(&self.get_serde_body()) {
             Ok(body) => Ok(body),

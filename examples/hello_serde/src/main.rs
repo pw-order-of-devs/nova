@@ -1,9 +1,9 @@
 use nova_web::core::errors::ServerError;
 use nova_web::core::types::request::HttpRequest;
-use nova_web::core::types::response::{HttpResponse, ServerResponse};
+use nova_web::core::types::response::{HttpResponse, HttpResponseData, ServerResponse};
 use nova_web::core::types::status::HttpStatus;
 use nova_web::routing::{post, ServerRouting};
-use nova_web::serde::{Deserialize, SerdeRequest, Serialize};
+use nova_web::serde::{Deserialize, SerdeRequest, SerdeResponse, Serialize};
 use nova_web::server::Server;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -12,32 +12,33 @@ struct RequestBody {
     name: String,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+struct ResponseBody {
+    name: String,
+}
+
 fn hello_json(req: HttpRequest, res: HttpResponse) -> ServerResponse {
     let body: RequestBody = req.json()?;
-    Ok(res
-        .status(HttpStatus::OK)
-        .body(&format!("Hello, {}!", body.name)))
+    let response = ResponseBody { name: body.name };
+    res.status(HttpStatus::OK)?.body_json(&response)
 }
 
 fn hello_form(req: HttpRequest, res: HttpResponse) -> ServerResponse {
     let body: RequestBody = req.form()?;
-    Ok(res
-        .status(HttpStatus::OK)
-        .body(&format!("Hello, {}!", body.name)))
+    let response = ResponseBody { name: body.name };
+    res.status(HttpStatus::OK)?.body_json(&response)
 }
 
 fn hello_form_urlencoded(req: HttpRequest, res: HttpResponse) -> ServerResponse {
     let body: RequestBody = req.form_urlencoded()?;
-    Ok(res
-        .status(HttpStatus::OK)
-        .body(&format!("Hello, {}!", body.name)))
+    let response = ResponseBody { name: body.name };
+    res.status(HttpStatus::OK)?.body_json(&response)
 }
 
 fn hello_xml(req: HttpRequest, res: HttpResponse) -> ServerResponse {
     let body: RequestBody = req.xml()?;
-    Ok(res
-        .status(HttpStatus::OK)
-        .body(&format!("Hello, {}!", body.name)))
+    let response = ResponseBody { name: body.name };
+    res.status(HttpStatus::OK)?.body_xml(&response)
 }
 
 #[tokio::main]

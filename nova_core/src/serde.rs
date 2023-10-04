@@ -1,7 +1,10 @@
-use nova_serde::serde::{Deserialize, SerdeRequest};
+use nova_serde::request::SerdeRequest;
+use nova_serde::response::SerdeResponse;
+use nova_serde::{Deserialize, Serialize};
 
 use crate::errors::ServerError;
 use crate::request::HttpRequest;
+use crate::response::{HttpResponse, HttpResponseData};
 
 impl<S: for<'a> Deserialize<'a>> SerdeRequest<S> for HttpRequest {
     type Err = ServerError;
@@ -11,7 +14,21 @@ impl<S: for<'a> Deserialize<'a>> SerdeRequest<S> for HttpRequest {
     }
 
     fn parse_error(err: impl std::error::Error) -> Self::Err {
-        ServerError::ParseRequestError {
+        ServerError::ParseError {
+            message: err.to_string(),
+        }
+    }
+}
+
+impl<S: Serialize> SerdeResponse<S> for HttpResponse {
+    type Err = ServerError;
+
+    fn with_body(&self, body: &str) -> Self {
+        self.clone().body(body).map_or_else(|_| self.clone(), |s| s)
+    }
+
+    fn parse_error(err: impl std::error::Error) -> Self::Err {
+        ServerError::ParseError {
             message: err.to_string(),
         }
     }
