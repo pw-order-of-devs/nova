@@ -12,7 +12,10 @@ pub enum ServerError {
     /// EmptyRequest
     EmptyRequest,
     /// InternalError
-    InternalError,
+    InternalError {
+        /// error message
+        message: String,
+    },
     /// IoError
     IoError {
         /// error message
@@ -36,7 +39,7 @@ impl Display for ServerError {
         match self {
             Self::BadRequest { message } => write!(f, "Bad Request: {message}"),
             Self::EmptyRequest => write!(f, "Empty Request"),
-            Self::InternalError => write!(f, "Internal Error"),
+            Self::InternalError { message } => write!(f, "Internal Error: {message}"),
             Self::IoError { message } => write!(f, "IO Error: {message}"),
             Self::NotFound => write!(f, "Not Found"),
             Self::ParseError { message } => {

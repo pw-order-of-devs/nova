@@ -7,7 +7,7 @@ pub trait SerdeResponse<S: Serialize> {
 
     /// set body for response
     #[must_use]
-    fn with_body(&self, body: &str) -> Self;
+    fn with_body(&self, body: &[u8]) -> Self;
 
     /// parse serde error
     fn parse_error(_: impl std::error::Error) -> Self::Err;
@@ -22,7 +22,7 @@ pub trait SerdeResponse<S: Serialize> {
         Self: Sized,
     {
         match serde_json::to_string(&item) {
-            Ok(body) => Ok(self.with_body(&body)),
+            Ok(body) => Ok(self.with_body(body.as_bytes())),
             Err(err) => Err(Self::parse_error(err)),
         }
     }
@@ -37,7 +37,7 @@ pub trait SerdeResponse<S: Serialize> {
         Self: Sized,
     {
         match serde_xml_rs::to_string(&item) {
-            Ok(body) => Ok(self.with_body(&body)),
+            Ok(body) => Ok(self.with_body(body.as_bytes())),
             Err(err) => Err(Self::parse_error(err)),
         }
     }

@@ -112,19 +112,19 @@ impl Server {
     ) -> std::io::Result<()> {
         let route_path = request.get_route_path();
         match &mut router.match_route(route_path.0, &route_path.1, router.clone().get_fallback()) {
-            Some((callable, path)) => match callable(
-                request.update_path(path),
-                HttpResponse::default().protocol(protocol).unwrap(),
-            ) {
-                Ok(mut response) => match middlewares.call_for_res(&mut response) {
-                    Ok(_) => {
-                        stream
-                            .write_all(format!("{}", response.append_default_headers()).as_bytes())
-                            .await
-                    }
-                    Err(err) => Self::handle_error(stream, err).await,
-                },
-                Err(e) => Self::handle_error(stream, e).await,
+            Some((callable, path)) => {
+                let http_response = HttpResponse::with_request(request.clone()).protocol(protocol).unwrap();
+                match callable(request.update_path(path), http_response) {
+                    Ok(mut response) => match middlewares.call_for_res(&mut response) {
+                        Ok(_) => {
+                            stream
+                                .write_all(format!("{}", response.append_default_headers()).as_bytes())
+                                .await
+                        }
+                        Err(err) => Self::handle_error(stream, err).await,
+                    },
+                    Err(e) => Self::handle_error(stream, e).await,
+                }
             },
             None => Self::handle_error(stream, ServerError::NotFound).await,
         }

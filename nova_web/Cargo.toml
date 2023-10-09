@@ -1,6 +1,7 @@
 [package]
 name = "nova_web"
 version = "0.0.0"
+rust-version = "1.63"
 edition = "2021"
 authors = [ "Paweł Walus <pawel.walus@protonmail.com>" ]
 description = "nova - rust web server"

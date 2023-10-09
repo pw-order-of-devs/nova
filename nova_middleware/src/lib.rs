@@ -18,6 +18,7 @@
 //!
 //! ```file_tree
 //! `nova_middleware`
+//! ├── impl -> ...
 //! ├── middleware.rs
 //! ├── middlewares.rs
 //! └── server_middleware.rs
@@ -33,3 +34,6 @@ pub mod middleware;
 pub mod middlewares;
 /// Server middleware integration
 pub mod server_middleware;
+
+/// implementation of basic middlewares
+pub mod r#impl;

@@ -2,10 +2,11 @@
 `nova_web` - a web server framework written in Rust
 
 [![crates.io](https://img.shields.io/crates/v/nova_web?label=latest)](https://crates.io/crates/nova_web)
-![downloads](https://img.shields.io/crates/d/nova_web.svg)
 [![Documentation](https://docs.rs/nova_web/badge.svg?version=latest)](https://docs.rs/nova_web/latest)
-![MIT or Apache 2.0 licensed](https://img.shields.io/crates/l/nova_web.svg) \
+![MIT or Apache 2.0 licensed](https://img.shields.io/crates/l/nova_web.svg)
+![MSRV](https://img.shields.io/badge/rustc-1.63+-ab6000.svg) \
 [![CI](https://github.com/pw-order-of-devs/nova/actions/workflows/default.yml/badge.svg)](https://github.com/pw-order-of-devs/nova/actions/workflows/default.yml)
+![downloads](https://img.shields.io/crates/d/nova_web.svg)
 [![Dependency Status](https://deps.rs/crate/nova_web/latest/status.svg)](https://deps.rs/crate/nova_web)
 
 More information about this crate can be found in the [crate documentation][docs]. \

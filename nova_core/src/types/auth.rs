@@ -30,10 +30,12 @@ impl BasicAuth {
                         password: creds[1].to_string(),
                     })
                 } else {
-                    Err(ServerError::InternalError)
+                    Err(ServerError::InternalError {
+                        message: "Basic Auth header is invalid".to_string(),
+                    })
                 }
             }
-            Err(_) => Err(ServerError::InternalError),
+            Err(err) => Err(ServerError::InternalError { message: err.to_string() }),
         }
     }
 

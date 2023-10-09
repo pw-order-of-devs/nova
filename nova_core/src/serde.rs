@@ -23,7 +23,7 @@ impl<S: for<'a> Deserialize<'a>> SerdeRequest<S> for HttpRequest {
 impl<S: Serialize> SerdeResponse<S> for HttpResponse {
     type Err = ServerError;
 
-    fn with_body(&self, body: &str) -> Self {
+    fn with_body(&self, body: &[u8]) -> Self {
         self.clone().body(body).map_or_else(|_| self.clone(), |s| s)
     }
 
