@@ -12,7 +12,7 @@ impl Middleware for BasicAuthMiddleware {
     }
 }
 
-fn hello_world(_: HttpRequest, mut res: HttpResponse) -> ServerResponse {
+fn hello_world(_: &HttpRequest, res: &mut HttpResponse) -> ServerResponse {
     res.status(HttpStatus::OK).body("Hello, World!".as_bytes())
 }
 

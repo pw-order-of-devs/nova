@@ -1,11 +1,13 @@
 use nova_web::prelude::*;
 
-fn hello_world(_: HttpRequest, res: HttpResponse) -> ServerResponse {
-    res.status(HttpStatus::OK).body("Hello, World!")
+fn hello_world(_: &HttpRequest, res: &mut HttpResponse) -> ServerResponse {
+    res.status(HttpStatus::OK).body("Hello, World!".as_bytes())
 }
 
-fn error_page(_: HttpRequest, _: HttpResponse) -> ServerResponse {
-    Err(ServerError::InternalError)
+fn error_page(_: &HttpRequest, _: &mut HttpResponse) -> ServerResponse {
+    Err(ServerError::InternalError {
+        message: "error happened".to_string(),
+    })
 }
 
 #[tokio::main]

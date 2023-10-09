@@ -23,11 +23,11 @@ impl Middlewares {
     /// # Errors
     ///
     /// * if calling middleware returns an error, this error is returned
-    pub fn call_for_req(&self, req: &mut HttpRequest) -> Result<(), ServerError> {
+    pub fn call_for_req(&self, request: &mut HttpRequest) -> Result<(), ServerError> {
         let binding = self
             .inner
             .values()
-            .map(|boxed| boxed.request(req))
+            .map(|boxed| boxed.request(request))
             .collect::<Vec<Result<(), _>>>();
         let error = binding.iter().find(|item| item.is_err());
         error.map_or(Ok(()), Clone::clone)
@@ -38,11 +38,15 @@ impl Middlewares {
     /// # Errors
     ///
     /// * if calling middleware returns an error, this error is returned
-    pub fn call_for_res(&self, res: &mut HttpResponse) -> Result<(), ServerError> {
+    pub fn call_for_res(
+        &self,
+        request: &HttpRequest,
+        response: &mut HttpResponse,
+    ) -> Result<(), ServerError> {
         let binding = self
             .inner
             .values()
-            .map(|boxed| boxed.response(res))
+            .map(|boxed| boxed.response(request, response))
             .collect::<Vec<Result<(), _>>>();
         let error = binding.iter().find(|item| item.is_err());
         error.map_or(Ok(()), Clone::clone)

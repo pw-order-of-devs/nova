@@ -1,6 +1,6 @@
 [package]
 name = "nova_middleware"
-version = "0.0.0"
+version = "0.0.1"
 edition = "2021"
 authors = [ "Paweł Walus <pawel.walus@protonmail.com>" ]
 description = "nova - middleware"
@@ -18,3 +18,4 @@ path = "src/lib.rs"
 [dependencies]
 nova_core = { path = "../nova_core" }
 uuid = { version = "1.4", features = ["v4"] }
+flate2 = "1.0"

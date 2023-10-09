@@ -20,7 +20,7 @@ impl Middleware for LogRequestMiddleware {
 pub struct LogResponseMiddleware {}
 
 impl Middleware for LogResponseMiddleware {
-    fn response(&self, res: &mut HttpResponse) -> Result<(), ServerError> {
+    fn response(&self, _: &HttpRequest, res: &mut HttpResponse) -> Result<(), ServerError> {
         eprintln!("{res}");
         Ok(())
     }

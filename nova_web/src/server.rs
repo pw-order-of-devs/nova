@@ -57,7 +57,7 @@ impl Server {
                 match Self::handle_request(&mut stream).await {
                     Ok(mut request) => {
                         match middlewares.call_for_req(&mut request) {
-                            Ok(_) => {}
+                            Ok(()) => {}
                             Err(err) => {
                                 let _ = Self::handle_error(&mut stream, err).await;
                             }
@@ -85,7 +85,7 @@ impl Server {
             let mut str = [0u8; 1024];
             let n = stream.read(&mut str).await;
             match n {
-                Ok(n) if n == 0 => break,
+                Ok(0) => break,
                 Ok(n) => {
                     buf.push(str.as_slice().to_vec());
                     if n < 1024 {
@@ -113,19 +113,24 @@ impl Server {
         let route_path = request.get_route_path();
         match &mut router.match_route(route_path.0, &route_path.1, router.clone().get_fallback()) {
             Some((callable, path)) => {
-                let http_response = HttpResponse::with_request(request.clone()).protocol(protocol).unwrap();
-                match callable(request.update_path(path), http_response) {
-                    Ok(mut response) => match middlewares.call_for_res(&mut response) {
-                        Ok(_) => {
-                            stream
-                                .write_all(format!("{}", response.append_default_headers()).as_bytes())
-                                .await
+                let http_request = request.update_path(path);
+                let http_response = &mut HttpResponse::default().protocol(protocol).unwrap();
+                match callable(&http_request, http_response) {
+                    Ok(mut response) => {
+                        match middlewares.call_for_res(&http_request, &mut response) {
+                            Ok(()) => {
+                                stream
+                                    .write_all(
+                                        format!("{}", response.append_default_headers()).as_bytes(),
+                                    )
+                                    .await
+                            }
+                            Err(err) => Self::handle_error(stream, err).await,
                         }
-                        Err(err) => Self::handle_error(stream, err).await,
-                    },
+                    }
                     Err(e) => Self::handle_error(stream, e).await,
                 }
-            },
+            }
             None => Self::handle_error(stream, ServerError::NotFound).await,
         }
     }

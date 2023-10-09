@@ -35,7 +35,9 @@ impl BasicAuth {
                     })
                 }
             }
-            Err(err) => Err(ServerError::InternalError { message: err.to_string() }),
+            Err(err) => Err(ServerError::InternalError {
+                message: err.to_string(),
+            }),
         }
     }
 

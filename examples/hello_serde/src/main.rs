@@ -11,25 +11,25 @@ struct ResponseBody {
     name: String,
 }
 
-fn hello_json(req: HttpRequest, res: HttpResponse) -> ServerResponse {
+fn hello_json(req: &HttpRequest, res: &mut HttpResponse) -> ServerResponse {
     let body: RequestBody = req.json()?;
     let response = ResponseBody { name: body.name };
     res.status(HttpStatus::OK)?.body_json(&response)
 }
 
-fn hello_form(req: HttpRequest, res: HttpResponse) -> ServerResponse {
+fn hello_form(req: &HttpRequest, res: &mut HttpResponse) -> ServerResponse {
     let body: RequestBody = req.form()?;
     let response = ResponseBody { name: body.name };
     res.status(HttpStatus::OK)?.body_json(&response)
 }
 
-fn hello_form_urlencoded(req: HttpRequest, res: HttpResponse) -> ServerResponse {
+fn hello_form_urlencoded(req: &HttpRequest, res: &mut HttpResponse) -> ServerResponse {
     let body: RequestBody = req.form_urlencoded()?;
     let response = ResponseBody { name: body.name };
     res.status(HttpStatus::OK)?.body_json(&response)
 }
 
-fn hello_xml(req: HttpRequest, res: HttpResponse) -> ServerResponse {
+fn hello_xml(req: &HttpRequest, res: &mut HttpResponse) -> ServerResponse {
     let body: RequestBody = req.xml()?;
     let response = ResponseBody { name: body.name };
     res.status(HttpStatus::OK)?.body_xml(&response)

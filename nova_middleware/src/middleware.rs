@@ -23,7 +23,7 @@ pub trait Middleware {
     /// # Errors
     ///
     /// * if calling middleware returns an error, this error is returned
-    fn response(&self, _: &mut HttpResponse) -> Result<(), ServerError> {
+    fn response(&self, _: &HttpRequest, _: &mut HttpResponse) -> Result<(), ServerError> {
         Ok(())
     }
 }

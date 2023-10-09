@@ -27,6 +27,12 @@ impl<S: Serialize> SerdeResponse<S> for HttpResponse {
         self.clone().body(body).map_or_else(|_| self.clone(), |s| s)
     }
 
+    fn with_header(&self, key: &str, value: &str) -> Self {
+        self.clone()
+            .header(key, value)
+            .map_or_else(|_| self.clone(), |s| s)
+    }
+
     fn parse_error(err: impl std::error::Error) -> Self::Err {
         ServerError::ParseError {
             message: err.to_string(),

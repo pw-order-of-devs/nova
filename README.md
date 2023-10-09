@@ -29,7 +29,7 @@ Custom Dependency Injection provides a flexibility to control the dependencies l
 in Cargo.toml:
 ```toml
 [dependencies]
-nova_web = "0.0.0"
+nova_web = "0.0.1"
 tokio = "1.32"
 serde = { version = "1.0", features = ["derive"] }
 ```
@@ -43,17 +43,17 @@ struct RequestBody {
     name: String,
 }
 
-fn hello_world(_: HttpRequest, res: HttpResponse) -> ServerResponse {
+fn hello_world(_: &HttpRequest, res: &mut HttpResponse) -> ServerResponse {
     Ok(res
         .status(HttpStatus::OK)
-        .body("Hello, world!"))
+        .body("Hello, world!".as_bytes()))
 }
 
-fn hello_json(req: HttpRequest, res: HttpResponse) -> ServerResponse {
+fn hello_json(req: &HttpRequest, res: &mut HttpResponse) -> ServerResponse {
     let body: RequestBody = req.json()?;
     Ok(res
         .status(HttpStatus::OK)
-        .body(&format!("Hello, {}!", body.name)))
+        .body(format!("Hello, {}!", body.name).as_bytes()))
 }
 
 #[tokio::main]

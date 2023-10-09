@@ -1,7 +1,7 @@
 use nova_web::prelude::*;
 
-fn hello_world(_: HttpRequest, res: HttpResponse) -> ServerResponse {
-    res.status(HttpStatus::OK).body("Hello, World!")
+fn hello_world(_: &HttpRequest, res: &mut HttpResponse) -> ServerResponse {
+    res.status(HttpStatus::OK).body("Hello, World!".as_bytes())
 }
 
 #[tokio::main]

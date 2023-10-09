@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 pub use {
-    nova_middleware::r#impl::logging::*,
     nova_middleware::middleware::{BoxedMiddleware, Middleware},
+    nova_middleware::r#impl::logging::*,
     nova_middleware::server_middleware::ServerMiddleware,
 };
 

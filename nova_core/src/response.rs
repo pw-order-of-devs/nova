@@ -2,7 +2,6 @@ use std::fmt::{Display, Formatter};
 
 use crate::errors::ServerError;
 use crate::ext::hash_map_ext::HashMapExt;
-use crate::request::HttpRequest;
 use crate::types::headers::Headers;
 use crate::types::protocol::Protocol;
 use crate::types::status::HttpStatus;
@@ -13,7 +12,6 @@ pub type ServerResponse = Result<HttpResponse, ServerError>;
 /// Nova Response definition
 #[derive(Clone, Debug, Default)]
 pub struct HttpResponse {
-    request: HttpRequest,
     protocol: Protocol,
     status: HttpStatus,
     body: Vec<u8>,
@@ -21,24 +19,6 @@ pub struct HttpResponse {
 }
 
 impl HttpResponse {
-    /// Create new `HttpResponse`
-    #[must_use]
-    pub fn new(request: HttpRequest, status: HttpStatus, body: &str, headers: Headers, protocol: Protocol) -> Self {
-        Self {
-            request,
-            protocol,
-            status,
-            body: body.as_bytes().to_vec(),
-            headers,
-        }
-    }
-
-    /// Create new `HttpResponse` with request
-    #[must_use]
-    pub fn with_request(request: HttpRequest) -> Self {
-        Self { request, ..Default::default() }
-    }
-
     /// Build Nova Response from `NovaError`
     #[must_use]
     pub fn from_error(e: &ServerError, protocol: Protocol) -> Self {
@@ -47,7 +27,9 @@ impl HttpResponse {
                 (HttpStatus::BadRequest, "Bad request")
             }
             ServerError::EmptyRequest => (HttpStatus::BadRequest, "Empty request"),
-            ServerError::InternalError { .. } => (HttpStatus::InternalServerError, "Internal error"),
+            ServerError::InternalError { .. } => {
+                (HttpStatus::InternalServerError, "Internal error")
+            }
             ServerError::IoError { .. } => (HttpStatus::InternalServerError, "IO error"),
             ServerError::NotFound { .. } => (HttpStatus::NotFound, "Not Found"),
             ServerError::Unauthorized => (HttpStatus::Unauthorized, "Unauthorized"),
@@ -59,7 +41,6 @@ impl HttpResponse {
         headers.insert("Content-length", &body.len().to_string());
 
         Self {
-            request: HttpRequest::default(),
             protocol,
             status,
             body: body.as_bytes().to_vec(),
@@ -77,18 +58,6 @@ impl HttpResponse {
         self.headers
             .insert_if_not_exists("Date", &chrono::Utc::now().to_rfc2822());
         self.clone()
-    }
-
-    /// Get response body string
-    #[must_use]
-    pub fn get_body_string(&self) -> Vec<u8> {
-        self.body.clone()
-    }
-
-    /// Get request
-    #[must_use]
-    pub fn get_request(&self) -> HttpRequest {
-        self.request.clone()
     }
 }
 
@@ -187,7 +156,11 @@ impl Display for HttpResponse {
             errors.push(write!(f, "\r\n{}", self.headers));
         }
         if !self.body.is_empty() {
-            errors.push(write!(f, "\r\n\r\n{}", String::from_utf8(self.body.clone()).unwrap()));
+            errors.push(write!(
+                f,
+                "\r\n\r\n{}",
+                String::from_utf8(self.body.clone()).unwrap()
+            ));
         }
 
         if errors.is_empty() {
