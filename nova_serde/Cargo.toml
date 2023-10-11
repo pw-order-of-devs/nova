@@ -1,0 +1,23 @@
+[package]
+name = "nova_serde"
+version = "0.0.1"
+edition = "2021"
+authors = [ "Paweł Walus <pawel.walus@protonmail.com>" ]
+description = "nova - router"
+keywords = ["nova", "http", "web", "server", "async"]
+categories = ["network-programming", "asynchronous", "web-programming::http-server"]
+homepage = "https://github.com/pw-order-of-devs"
+repository = "https://github.com/pw-order-of-devs/nova"
+license = "MIT OR Apache-2.0"
+readme = "../README.md"
+publish = true
+
+[lib]
+name = "nova_serde"
+path = "src/lib.rs"
+
+[dependencies]
+serde = "1.0"
+serde_json = "1.0"
+serde_urlencoded = "0.7"
+serde-xml-rs = "0.6"

@@ -1,0 +1,22 @@
+[package]
+name = "nova_middleware"
+version = "0.0.1"
+edition = "2021"
+authors = [ "Paweł Walus <pawel.walus@protonmail.com>" ]
+description = "nova - middleware"
+keywords = ["nova", "http", "web", "server", "async"]
+categories = ["network-programming", "asynchronous", "web-programming::http-server"]
+homepage = "https://github.com/pw-order-of-devs"
+repository = "https://github.com/pw-order-of-devs/nova"
+license = "MIT OR Apache-2.0"
+readme = "../README.md"
+publish = true
+
+[lib]
+name = "nova_middleware"
+path = "src/lib.rs"
+
+[dependencies]
+nova_core = { path = "../nova_core", version = "0.0.1" }
+uuid = { version = "1.4", features = ["v4"] }
+flate2 = "1.0"

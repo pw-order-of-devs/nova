@@ -1,0 +1,28 @@
+[package]
+name = "nova_web"
+version = "0.0.1"
+rust-version = "1.63"
+edition = "2021"
+authors = [ "Paweł Walus <pawel.walus@protonmail.com>" ]
+description = "nova - rust web server"
+keywords = ["nova", "http", "web", "server", "async"]
+categories = ["network-programming", "asynchronous", "web-programming::http-server"]
+homepage = "https://github.com/pw-order-of-devs"
+repository = "https://github.com/pw-order-of-devs/nova"
+license = "MIT OR Apache-2.0"
+readme = "../README.md"
+publish = true
+
+[lib]
+name = "nova_web"
+path = "src/lib.rs"
+
+[features]
+serde = ["dep:nova_serde"]
+
+[dependencies]
+nova_core = { path = "../nova_core", version = "0.0.1" }
+nova_middleware = { path = "../nova_middleware", version = "0.0.1" }
+nova_router = { path = "../nova_router", version = "0.0.1" }
+nova_serde = { path = "../nova_serde", version = "0.0.1", optional = true }
+tokio = { version = "1.32", features = ["full"] }
