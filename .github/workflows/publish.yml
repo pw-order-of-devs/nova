@@ -6,13 +6,6 @@ on:
       - v[0-9]+.[0-9]+.[0-9]+
 
 jobs:
-  extract_tag:
-    name: Extract Tag
-    id: tag
-    uses: aaronbarnaby/get-tag@v1.0.0
-    with:
-      without_prefix_v: true
-
   publish:
     name: Publish
     runs-on: ubuntu-latest
@@ -25,12 +18,16 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - name: Extract Tag
+        id: tag
+        uses: aaronbarnaby/get-tag@v1.0.0
+        with:
+          without_prefix_v: true
       - run: |
           cargo install cargo-publish-workspace-v2
-          cargo publish-workspace -p nova_web --token ${CRATES_TOKEN} --target-version ${GIT_TAG_NAME}
+          cargo publish-workspace -p nova_web --token ${CRATES_TOKEN} --target-version ${{ steps.tag.outputs.tag }}
         env:
           CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
-          GIT_TAG_NAME: ${{ steps.tag.outputs.tag }}
 
   publish-docs:
     name: Publish docs
