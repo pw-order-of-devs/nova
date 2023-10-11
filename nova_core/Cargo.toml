@@ -10,12 +10,13 @@ homepage = "https://github.com/pw-order-of-devs"
 repository = "https://github.com/pw-order-of-devs/nova"
 license = "MIT OR Apache-2.0"
 readme = "../README.md"
+publish = false
 
 [lib]
 name = "nova_core"
 path = "src/lib.rs"
 
 [dependencies]
-nova_serde = { path = "../nova_serde" }
+nova_serde = { path = "../nova_serde", version = "0.0.1" }
 base64 = "0.21"
 chrono = "0.4"

@@ -10,11 +10,12 @@ homepage = "https://github.com/pw-order-of-devs"
 repository = "https://github.com/pw-order-of-devs/nova"
 license = "MIT OR Apache-2.0"
 readme = "../README.md"
+publish = false
 
 [lib]
 name = "nova_router"
 path = "src/lib.rs"
 
 [dependencies]
-nova_core = { path = "../nova_core" }
+nova_core = { path = "../nova_core", version = "0.0.1" }
 regex = "1.9"

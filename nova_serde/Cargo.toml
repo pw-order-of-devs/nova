@@ -10,6 +10,7 @@ homepage = "https://github.com/pw-order-of-devs"
 repository = "https://github.com/pw-order-of-devs/nova"
 license = "MIT OR Apache-2.0"
 readme = "../README.md"
+publish = false
 
 [lib]
 name = "nova_serde"
