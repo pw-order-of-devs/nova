@@ -20,7 +20,7 @@ jobs:
           override: true
       - run: |
           cargo install cargo-publish-workspace-v2
-          cargo publish-workspace -p nova_web --token ${CRATES_TOKEN}
+          cargo publish-workspace -p nova_web --token ${CRATES_TOKEN} --target-version ${GIT_TAG_NAME}
         env:
           CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
 
