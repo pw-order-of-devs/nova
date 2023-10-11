@@ -1,0 +1,21 @@
+[package]
+name = "nova_router"
+version = "0.0.1"
+edition = "2021"
+authors = [ "Paweł Walus <pawel.walus@protonmail.com>" ]
+description = "nova - router"
+keywords = ["nova", "http", "web", "server", "async"]
+categories = ["network-programming", "asynchronous", "web-programming::http-server"]
+homepage = "https://github.com/pw-order-of-devs"
+repository = "https://github.com/pw-order-of-devs/nova"
+license = "MIT OR Apache-2.0"
+readme = "../README.md"
+publish = false
+
+[lib]
+name = "nova_router"
+path = "src/lib.rs"
+
+[dependencies]
+nova_core = { path = "../nova_core", version = "0.0.1" }
+regex = "1.9"
